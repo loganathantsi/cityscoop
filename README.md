@@ -1,4 +1,4 @@
-# city_scoop
+# CityScoop
 
 A new Flutter project.
 
