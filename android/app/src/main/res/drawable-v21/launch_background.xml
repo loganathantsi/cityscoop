@@ -3,7 +3,7 @@
     <item android:drawable="?android:colorBackground" />
     <item>
         <bitmap
-            android:gravity="center"
+            android:gravity="fill"
             android:src="@drawable/screen"/>
     </item>
 </layer-list>

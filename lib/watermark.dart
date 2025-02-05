@@ -1,147 +1,191 @@
-import 'dart:io';
-import 'dart:typed_data';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:image/image.dart' as img;
-import 'package:path_provider/path_provider.dart';
-
-void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: ImagePickerScreen(),
-    );
-  }
-}
-
-class ImagePickerScreen extends StatefulWidget {
-  @override
-  _ImagePickerScreenState createState() => _ImagePickerScreenState();
-}
-
-class _ImagePickerScreenState extends State<ImagePickerScreen> {
-  File? _image;
-  File? _watermarkedImage;
-  final ImagePicker _picker = ImagePicker();
-  double _opacity = 0.5; // Default transparency (50%)
-
-  /// Pick Image from Gallery
-  Future<void> _pickImage() async {
-    final XFile? pickedFile =
-    await _picker.pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      setState(() {
-        _image = File(pickedFile.path);
-      });
-      _addWatermark();
-    }
-  }
-
-  /// Add Watermark with Adjustable Opacity
-  Future<void> _addWatermark() async {
-    if (_image == null) return;
-
-    // Load the selected image
-    img.Image originalImage = img.decodeImage(await _image!.readAsBytes())!;
-
-    // Load the watermark image (use an asset or external file)
-    ByteData data = await rootBundle.load('assets/images/ic_calendar.png');
-    Uint8List bytes = data.buffer.asUint8List();
-    img.Image watermark = img.decodeImage(bytes)!;
-
-    // Resize watermark
-    watermark = img.copyResize(watermark, width: originalImage.width ~/ 5);
-
-// Apply transparency to watermark
-    for (int y = 0; y < watermark.height; y++) {
-// Apply transparency to watermark
-      for (int y = 0; y < watermark.height; y++) {
-        for (int x = 0; x < watermark.width; x++) {
-          img.Pixel pixel = watermark.getPixel(x, y);
-
-          // Extract RGBA components
-          int r = pixel.r.toInt();
-          int g = pixel.g.toInt();
-          int b = pixel.b.toInt();
-          int a = pixel.a.toInt();
-
-          // Apply opacity factor
-          int newAlpha = (a * _opacity).toInt().clamp(0, 255);
-
-          // Create a new color with updated alpha
-          img.ColorInt32 newColor = img.ColorInt32.rgba(r, g, b, newAlpha);
-
-          // Set the new color back to the image
-          watermark.setPixel(x, y, newColor);
-        }
-      }
-    }
-
-    // Composite watermark on bottom-right corner
-    int x = originalImage.width - watermark.width - 20;
-    int y = originalImage.height - watermark.height - 20;
-    img.compositeImage(originalImage, watermark, dstX: x, dstY: y);
-
-    // Save watermarked image
-    Uint8List newImageBytes = Uint8List.fromList(img.encodePng(img.compositeImage(originalImage, watermark, dstX: x, dstY: y)));
-
-    final directory = await getApplicationDocumentsDirectory();
-    final File newFile = File('${directory.path}/watermarked_image.jpg');
-    await newFile.writeAsBytes(newImageBytes);
-
-    setState(() {
-      _watermarkedImage = newFile;
-    });
-  }
-
-  /// Upload Image (Placeholder for Upload Logic)
-  Future<void> _uploadImage() async {
-    if (_watermarkedImage == null) return;
-    ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text("Image uploaded successfully!")));
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text("Image Watermark & Upload")),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            _image == null
-                ? Text("No Image Selected")
-                : Image.file(_image!, height: 200),
-            SizedBox(height: 20),
-            _watermarkedImage == null
-                ? Text("No Watermark Added")
-                : Image.file(_watermarkedImage!, height: 200),
-            SizedBox(height: 20),
-            Text("Watermark Transparency: ${(100 * _opacity).toInt()}%"),
-            Slider(
-              value: _opacity,
-              min: 0.0,
-              max: 1.0,
-              divisions: 10,
-              label: "${(100 * _opacity).toInt()}%",
-              onChanged: (double value) {
-                setState(() {
-                  _opacity = value;
-                });
-                _addWatermark();
-              },
-            ),
-            ElevatedButton(onPressed: _pickImage, child: Text("Pick Image")),
-            ElevatedButton(onPressed: _uploadImage, child: Text("Upload Image")),
-          ],
-        ),
-      ),
-    );
-  }
-}
+// import 'dart:io';
+// import 'dart:ui' as ui;
+// import 'dart:typed_data';
+// import 'dart:async';
+// import 'package:flutter/material.dart';
+// import 'package:flutter/services.dart';
+// import 'package:image_picker/image_picker.dart';
+//
+// void main() {
+//   runApp(MyApp());
+// }
+//
+// class MyApp extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return MaterialApp(
+//       home: WatermarkImageScreen(),
+//     );
+//   }
+// }
+//
+// class WatermarkImageScreen extends StatefulWidget {
+//   @override
+//   _WatermarkImageScreenState createState() => _WatermarkImageScreenState();
+// }
+//
+// class _WatermarkImageScreenState extends State<WatermarkImageScreen> {
+//   File? _imageFile;
+//   ui.Image? _watermarkImage;
+//   double _opacity = 0.5; // Default opacity
+//
+//   @override
+//   void initState() {
+//     super.initState();
+//     _loadWatermarkImage();
+//   }
+//
+//   /// Load watermark image from assets
+//   Future<void> _loadWatermarkImage() async {
+//     final ByteData data = await rootBundle.load('assets/images/popup-header-bg.png');
+//     final Uint8List bytes = data.buffer.asUint8List();
+//     final Completer<ui.Image> completer = Completer();
+//
+//     ui.decodeImageFromList(bytes, (ui.Image img) {
+//       completer.complete(img);
+//     });
+//
+//     _watermarkImage = await completer.future;
+//     setState(() {});
+//   }
+//
+//   /// Pick image from gallery
+//   Future<void> _pickImage() async {
+//     final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+//     if (pickedFile != null) {
+//       setState(() {
+//         _imageFile = File(pickedFile.path);
+//       });
+//     }
+//   }
+//
+//   /// Apply watermark with selected opacity
+//   Future<ui.Image> _applyWatermark(ui.Image image) async {
+//     final recorder = ui.PictureRecorder();
+//     final canvas = Canvas(recorder);
+//     final paint = Paint()..filterQuality = FilterQuality.high;
+//     final imageSize = Size(image.width.toDouble(), image.height.toDouble());
+//
+//     // Draw original image
+//     canvas.drawImage(image, Offset.zero, paint);
+//
+//     if (_watermarkImage != null) {
+//       final paintWatermark = Paint()
+//         ..color = Colors.white.withOpacity(_opacity) // Dynamic opacity
+//         ..blendMode = BlendMode.srcOver;
+//
+//       final double watermarkWidth = imageSize.width * 0.3;
+//       final double watermarkHeight = (_watermarkImage!.height / _watermarkImage!.width) * watermarkWidth;
+//       final double dx = imageSize.width - watermarkWidth - 20;
+//       final double dy = imageSize.height - watermarkHeight - 20;
+//
+//       final Rect watermarkRect = Rect.fromLTWH(dx, dy, watermarkWidth, watermarkHeight);
+//       canvas.drawImageRect(
+//           _watermarkImage!,
+//           Rect.fromLTWH(0, 0, _watermarkImage!.width.toDouble(), _watermarkImage!.height.toDouble()),
+//           watermarkRect,
+//           paintWatermark);
+//     }
+//
+//     final picture = recorder.endRecording();
+//     return picture.toImage(image.width, image.height);
+//   }
+//
+//   /// Convert File to ui.Image
+//   Future<ui.Image> _loadUiImage(File file) async {
+//     final Uint8List bytes = await file.readAsBytes();
+//     final Completer<ui.Image> completer = Completer();
+//     ui.decodeImageFromList(bytes, (ui.Image img) {
+//       completer.complete(img);
+//     });
+//     return completer.future;
+//   }
+//
+//   /// Navigate to preview page
+//   Future<void> _navigateToPreview() async {
+//     if (_imageFile == null) return;
+//
+//     final ui.Image originalImage = await _loadUiImage(_imageFile!);
+//     final ui.Image watermarkedImage = await _applyWatermark(originalImage);
+//
+//     Navigator.push(
+//       context,
+//       MaterialPageRoute(
+//         builder: (context) => PreviewScreen(image: watermarkedImage),
+//       ),
+//     );
+//   }
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(title: Text("Watermark Image")),
+//       body: Center(
+//         child: Column(
+//           mainAxisAlignment: MainAxisAlignment.center,
+//           children: [
+//             _imageFile == null
+//                 ? Text("No image selected")
+//                 : FutureBuilder<ui.Image>(
+//               future: _loadUiImage(_imageFile!),
+//               builder: (context, snapshot) {
+//                 if (snapshot.connectionState == ConnectionState.done && snapshot.hasData) {
+//                   return FutureBuilder<ui.Image>(
+//                     future: _applyWatermark(snapshot.data!),
+//                     builder: (context, watermarkSnapshot) {
+//                       if (watermarkSnapshot.connectionState == ConnectionState.done &&
+//                           watermarkSnapshot.hasData) {
+//                         return Column(
+//                           children: [
+//                             RawImage(image: watermarkSnapshot.data, width: 250),
+//                             Slider(
+//                               value: _opacity,
+//                               min: 0.0,
+//                               max: 1.0,
+//                               divisions: 10,
+//                               label: "Opacity: ${_opacity.toStringAsFixed(1)}",
+//                               onChanged: (value) {
+//                                 setState(() {
+//                                   _opacity = value;
+//                                 });
+//                               },
+//                             ),
+//                           ],
+//                         );
+//                       }
+//                       return CircularProgressIndicator();
+//                     },
+//                   );
+//                 }
+//                 return CircularProgressIndicator();
+//               },
+//             ),
+//             SizedBox(height: 20),
+//             ElevatedButton(onPressed: _pickImage, child: Text("Pick Image")),
+//             ElevatedButton(
+//               onPressed: _navigateToPreview,
+//               child: Text("Next Page"),
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }
+//
+// /// Preview Page
+// class PreviewScreen extends StatelessWidget {
+//   final ui.Image image;
+//
+//   PreviewScreen({required this.image});
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(title: Text("Final Image")),
+//       body: Center(
+//         child: RawImage(image: image),
+//       ),
+//     );
+//   }
+// }
