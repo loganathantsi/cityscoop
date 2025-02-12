@@ -1,3 +1,4 @@
+import 'package:CityScoop/widgets/dialog_terms_and_conditions.dart';
 import 'package:flutter/material.dart';
 import 'app/components/utilities.dart';
 import 'constants/strings.dart';
@@ -135,7 +136,11 @@ class LoginScreenState extends State<LoginScreen> {
                           RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
                         ),
                       ),
-                      onPressed: () {},
+                      onPressed: () {
+                        setState(() {
+                          termsAndConditonsDialog();
+                        });
+                      },
                       child: const Text(
                         'LOGIN',
                         style: TextStyle(fontSize: 14, color: Colors.white),
@@ -147,7 +152,7 @@ class LoginScreenState extends State<LoginScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       SizedBox(
-                        width: Utilities.getDeviceWidth(context) * 0.15,
+                        width: Utilities.getDeviceWidth(context) * 0.10,
                         child: Divider(color: Colors.grey[400], height: 4, thickness: 2),
                       ),
                       TextButton(
@@ -157,7 +162,7 @@ class LoginScreenState extends State<LoginScreen> {
                         ),
                       ),
                       SizedBox(
-                        width: Utilities.getDeviceWidth(context) * 0.15,
+                        width: Utilities.getDeviceWidth(context) * 0.10,
                         child: Divider(color: Colors.grey[400], height: 4, thickness: 2),
                       ),
                     ],
@@ -169,5 +174,15 @@ class LoginScreenState extends State<LoginScreen> {
         ),
       ),
     );
+  }
+
+  void termsAndConditonsDialog() {
+    var baseDialog = TermsAndConditonsDialog(
+      content: "TERMS AND CONDITIONS CONTENT",
+      yesOnPressed: () {
+        Navigator.pop(context);
+      },
+    );
+    showDialog(context: context, builder: (BuildContext context) => baseDialog);
   }
 }
