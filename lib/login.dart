@@ -1,6 +1,8 @@
 import 'package:CityScoop/widgets/dialog_terms_and_conditions.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'app/components/utilities.dart';
+import 'bloc/login/login_bloc.dart';
 import 'constants/strings.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -28,6 +30,13 @@ class LoginScreenState extends State<LoginScreen>
 
   @override
   Widget build(BuildContext context) {
+    return BlocConsumer<LoginBloc, LoginState>(
+    listener: (context, state) {
+      if (state is LoginStarted) {
+        dialogTerms();
+      }
+    },
+    builder: (context, state) {
     return Scaffold(
       backgroundColor: Colors.grey[200],
       body: Center(
@@ -155,9 +164,7 @@ class LoginScreenState extends State<LoginScreen>
                         ),
                       ),
                       onPressed: () {
-                        setState(() {
-                          termsAndConditonsDialog();
-                        });
+                        context.read<LoginBloc>().add((LoginStart()));
                       },
                       child: const Text(
                         'LOGIN',
@@ -195,18 +202,14 @@ class LoginScreenState extends State<LoginScreen>
         ),
       ),
     );
+    },
+    );
   }
 
-  void termsAndConditonsDialog() {
-    var baseDialog = TermsAndConditonsDialog(
-      content: "TERMS AND CONDITIONS CONTENT",
-      closeOnPressed: () {
-        Navigator.pop(context);
-      },
-      acceptOnPressed: () {
-        Navigator.pop(context);
-      },
+  void dialogTerms() {
+    showDialog(
+      context: context,
+      builder: (context) => DialogTerms(content: "Terms and Conditions content ..."),
     );
-    showDialog(context: context, builder: (BuildContext context) => baseDialog);
   }
 }
