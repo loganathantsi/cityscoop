@@ -4,15 +4,17 @@ import 'package:flutter/material.dart';
 
 class TermsAndConditonsDialog extends StatelessWidget {
   final String? _content;
-  final Function? _yesOnPressed;
+  final Function? _closeOnPressed;
+  final Function? _acceptOnPressed;
 
   const TermsAndConditonsDialog({
     super.key,
     required String? content,
-    required Function? yesOnPressed,
-      }) :
-    _content = content,
-    _yesOnPressed = yesOnPressed;
+    required Function? closeOnPressed,
+    required Function? acceptOnPressed,
+  })  : _content = content,
+        _closeOnPressed = closeOnPressed,
+        _acceptOnPressed = acceptOnPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -23,39 +25,43 @@ class TermsAndConditonsDialog extends StatelessWidget {
         height: Utilities.getDeviceHeight(context) * 0.6,
         child: Column(
           children: [
-            Stack(
-              alignment: AlignmentDirectional.center,
-              children: [
-                SizedBox(
+            Stack(alignment: AlignmentDirectional.center, children: [
+              SizedBox(
                   width: Utilities.getDeviceWidth(context),
                   height: 80,
-                  child: Image.asset(Strings.dialogheaderImage, height: 80, fit: BoxFit.fill)),
-                Positioned(
-                  top: 30,
-                  child: Center(
-                    child: Text("TERMS AND CONDITIONS",
-                      style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
-                    ),
+                  child: Image.asset(Strings.dialogheaderImage,
+                      height: 80, fit: BoxFit.fill)),
+              Positioned(
+                top: 30,
+                child: Center(
+                  child: Text(
+                    "TERMS AND CONDITIONS",
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold),
                   ),
                 ),
-                Positioned(
-                  top: 10,
-                  right: 10,
-                    child: InkWell(
-                      onTap: () {
-                        Navigator.of(context).pop();
-                        },
-                      child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                          width: 30,
-                          height: 30,
-                          child: Image.asset(Strings.closeIcon, height: 30, fit: BoxFit.fill)),
-                    ),
-                )
-              ]),
+              ),
+              Positioned(
+                top: 10,
+                right: 10,
+                child: InkWell(
+                  onTap: () {
+                    _closeOnPressed?.call();
+                  },
+                  child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      width: 30,
+                      height: 30,
+                      child: Image.asset(Strings.closeIcon,
+                          height: 30, fit: BoxFit.fill)),
+                ),
+              )
+            ]),
             Expanded(
               child: SingleChildScrollView(
                 child: Container(
@@ -68,7 +74,7 @@ class TermsAndConditonsDialog extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(top: 10,bottom: 10),
+              padding: const EdgeInsets.only(top: 10, bottom: 10),
               child: SizedBox(
                 width: 125,
                 child: ElevatedButton(
@@ -77,13 +83,15 @@ class TermsAndConditonsDialog extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(vertical: 5),
                   ).copyWith(
                     shape: WidgetStateProperty.all(
-                      RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+                      RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5)),
                     ),
                   ),
                   onPressed: () {
-                    _yesOnPressed?.call();
+                    _acceptOnPressed?.call();
                   },
-                  child: Text('ACCEPT',
+                  child: Text(
+                    'ACCEPT',
                     style: TextStyle(fontSize: 18, color: Colors.white),
                   ),
                 ),

@@ -10,8 +10,8 @@ class LoginScreen extends StatefulWidget {
   State<LoginScreen> createState() => LoginScreenState();
 }
 
-class LoginScreenState extends State<LoginScreen> {
-
+class LoginScreenState extends State<LoginScreen>
+    with SingleTickerProviderStateMixin {
   final ScrollController _scrollController = ScrollController();
 
   @override
@@ -27,7 +27,7 @@ class LoginScreenState extends State<LoginScreen> {
   }
 
   @override
-  Widget build (BuildContext context) {
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[200],
       body: Center(
@@ -46,9 +46,11 @@ class LoginScreenState extends State<LoginScreen> {
                   SizedBox(
                       width: Utilities.getDeviceWidth(context),
                       height: 100,
-                      child: Image.asset(Strings.logoGrey, height: 100, fit: BoxFit.fill)),
+                      child: Image.asset(Strings.logoGrey,
+                          height: 100, fit: BoxFit.fill)),
                   SizedBox(height: 40),
-                  Text('SIGN IN',
+                  Text(
+                    'SIGN IN',
                     style: TextStyle(
                       fontFamily: 'OldEnglish',
                       fontSize: 25,
@@ -64,17 +66,21 @@ class LoginScreenState extends State<LoginScreen> {
                       fillColor: Colors.white,
                       prefixIcon: Padding(
                         padding: EdgeInsets.all(10),
-                        child: Image.asset(Strings.userIcon, width: 24, height: 24),
+                        child: Image.asset(Strings.userIcon,
+                            width: 24, height: 24),
                       ),
                       hintText: 'Username or Email',
                       hintStyle: TextStyle(color: Colors.grey),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(5),
-                        borderSide: BorderSide(color: Colors.white, width: 0), // White border
+                        borderSide: BorderSide(
+                            color: Colors.white, width: 0), // White border
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(5),
-                        borderSide: BorderSide(color: Colors.white, width: 0), // White border when focused
+                        borderSide: BorderSide(
+                            color: Colors.white,
+                            width: 0), // White border when focused
                       ),
                     ),
                   ),
@@ -87,17 +93,21 @@ class LoginScreenState extends State<LoginScreen> {
                       fillColor: Colors.white,
                       prefixIcon: Padding(
                         padding: EdgeInsets.all(10),
-                        child: Image.asset(Strings.passwordIcon, width: 24, height: 24),
+                        child: Image.asset(Strings.passwordIcon,
+                            width: 24, height: 24),
                       ),
                       hintText: 'Password',
                       hintStyle: TextStyle(color: Colors.grey),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(5),
-                        borderSide: BorderSide(color: Colors.white, width: 2), // White border
+                        borderSide: BorderSide(
+                            color: Colors.white, width: 2), // White border
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(5),
-                        borderSide: BorderSide(color: Colors.white, width: 2), // White border when focused
+                        borderSide: BorderSide(
+                            color: Colors.white,
+                            width: 2), // White border when focused
                       ),
                     ),
                   ),
@@ -112,15 +122,22 @@ class LoginScreenState extends State<LoginScreen> {
                             onChanged: (value) {},
                             checkColor: Colors.black,
                             activeColor: Colors.grey[400],
-                            fillColor: WidgetStateProperty.all(Colors.grey[400]), // Background fill color
-                            shape: RoundedRectangleBorder( // Shapes the checkbox
-                              borderRadius: BorderRadius.circular(4), // Adjust for roundness
+                            fillColor:
+                                WidgetStateProperty.all(Colors.grey[400]),
+                            // Background fill color
+                            shape: RoundedRectangleBorder(
+                              // Shapes the checkbox
+                              borderRadius: BorderRadius.circular(
+                                  4), // Adjust for roundness
                             ),
-                            side: BorderSide(color: Colors.grey.shade700), // Adds border to the checkbox itself
+                            side: BorderSide(
+                                color: Colors.grey
+                                    .shade700), // Adds border to the checkbox itself
                           )),
                       Padding(
                         padding: const EdgeInsets.only(right: 10),
-                        child: Text('Remember Me', style: TextStyle(color: Colors.grey)),
+                        child: Text('Remember Me',
+                            style: TextStyle(color: Colors.grey)),
                       ),
                     ],
                   ),
@@ -133,7 +150,8 @@ class LoginScreenState extends State<LoginScreen> {
                         padding: const EdgeInsets.symmetric(vertical: 15),
                       ).copyWith(
                         shape: WidgetStateProperty.all(
-                          RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+                          RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5)),
                         ),
                       ),
                       onPressed: () {
@@ -153,17 +171,20 @@ class LoginScreenState extends State<LoginScreen> {
                     children: [
                       SizedBox(
                         width: Utilities.getDeviceWidth(context) * 0.10,
-                        child: Divider(color: Colors.grey[400], height: 4, thickness: 2),
+                        child: Divider(
+                            color: Colors.grey[400], height: 4, thickness: 2),
                       ),
                       TextButton(
                         onPressed: () {},
-                        child: Text('  Lost your password?  ',
+                        child: Text(
+                          '  Lost your password?  ',
                           style: TextStyle(color: Colors.grey),
                         ),
                       ),
                       SizedBox(
                         width: Utilities.getDeviceWidth(context) * 0.10,
-                        child: Divider(color: Colors.grey[400], height: 4, thickness: 2),
+                        child: Divider(
+                            color: Colors.grey[400], height: 4, thickness: 2),
                       ),
                     ],
                   ),
@@ -179,7 +200,10 @@ class LoginScreenState extends State<LoginScreen> {
   void termsAndConditonsDialog() {
     var baseDialog = TermsAndConditonsDialog(
       content: "TERMS AND CONDITIONS CONTENT",
-      yesOnPressed: () {
+      closeOnPressed: () {
+        Navigator.pop(context);
+      },
+      acceptOnPressed: () {
         Navigator.pop(context);
       },
     );
