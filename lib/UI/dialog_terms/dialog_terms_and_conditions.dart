@@ -1,7 +1,7 @@
-import 'package:CityScoop/bloc/dialog_terms/dialog_terms_bloc.dart';
 import 'package:CityScoop/constants/strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'dialog_terms_bloc.dart';
 
 class DialogTerms extends StatelessWidget {
   final String content;
@@ -12,7 +12,7 @@ class DialogTerms extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocConsumer<DialogTermsBloc, DialogTermsState>(
       listener: (context, state) {
-        if (state is DialogTermsAccepted || state is DialogTermsClosed) {
+        if (state is DialogTermsAcceptedState || state is DialogTermsClosedState) {
           Navigator.of(context).pop();
         }
       },
@@ -45,7 +45,7 @@ class DialogTerms extends StatelessWidget {
                       right: 10,
                       child: InkWell(
                         onTap: () {
-                          context.read<DialogTermsBloc>().add(DialogTermsClose());
+                          context.read<DialogTermsBloc>().add(DialogTermsCloseEvent());
                         },
                         child: Container(
                           decoration: BoxDecoration(
@@ -85,7 +85,7 @@ class DialogTerms extends StatelessWidget {
                         ),
                       ),
                       onPressed: () {
-                        context.read<DialogTermsBloc>().add(DialogTermsAccept());
+                        context.read<DialogTermsBloc>().add(DialogTermsAcceptEvent());
                       },
                       child: Text('ACCEPT',
                         style: TextStyle(fontSize: 18, color: Colors.white),

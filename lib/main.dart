@@ -1,8 +1,8 @@
+import 'package:CityScoop/UI/dialog_terms/dialog_terms_bloc.dart';
+import 'package:CityScoop/UI/login/login_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'bloc/dialog_terms/dialog_terms_bloc.dart';
-import 'bloc/login/login_bloc.dart';
-import 'login.dart';
+import 'UI/login/login.dart';
 
 void main() {
   runApp(CityScoop());

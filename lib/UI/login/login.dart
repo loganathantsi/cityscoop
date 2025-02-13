@@ -1,9 +1,9 @@
-import 'package:CityScoop/widgets/dialog_terms_and_conditions.dart';
+import 'package:CityScoop/UI/dialog_terms/dialog_terms_and_conditions.dart';
+import 'package:CityScoop/app/components/utilities.dart';
+import 'package:CityScoop/constants/strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'app/components/utilities.dart';
-import 'bloc/login/login_bloc.dart';
-import 'constants/strings.dart';
+import 'login_bloc.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -14,7 +14,10 @@ class LoginScreen extends StatefulWidget {
 
 class LoginScreenState extends State<LoginScreen>
     with SingleTickerProviderStateMixin {
+
   final ScrollController _scrollController = ScrollController();
+  final usernameController = TextEditingController(text: '');
+  final passwordController = TextEditingController(text: '');
 
   @override
   void initState() {
@@ -32,7 +35,7 @@ class LoginScreenState extends State<LoginScreen>
   Widget build(BuildContext context) {
     return BlocConsumer<LoginBloc, LoginState>(
     listener: (context, state) {
-      if (state is LoginStarted) {
+      if (state is LoginSuccessState) {
         dialogTerms();
       }
     },
@@ -69,6 +72,7 @@ class LoginScreenState extends State<LoginScreen>
                   ),
                   SizedBox(height: 30),
                   TextField(
+                    controller: usernameController,
                     cursorColor: Colors.blue,
                     decoration: InputDecoration(
                       filled: true,
@@ -95,6 +99,7 @@ class LoginScreenState extends State<LoginScreen>
                   ),
                   SizedBox(height: 10),
                   TextField(
+                    controller: passwordController,
                     cursorColor: Colors.blue,
                     obscureText: true,
                     decoration: InputDecoration(
@@ -164,7 +169,11 @@ class LoginScreenState extends State<LoginScreen>
                         ),
                       ),
                       onPressed: () {
-                        context.read<LoginBloc>().add((LoginStart()));
+                        context.read<LoginBloc>().add((
+                            LoginApiEvent(
+                                username: usernameController.text.trim(),
+                                password: passwordController.text.trim()
+                            )));
                       },
                       child: const Text(
                         'LOGIN',

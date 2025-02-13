@@ -11,4 +11,10 @@ class Strings {
   // Url
   static const String baseUrl = 'https://cityscoop.us/api/jwt-auth/v1/'; // Live
 
+  // api
+  static const String login = "login/";
+  static const String token = "token/";
+
+  static const String accessToken = "ACCESS_TOKEN";
+  static const String loginSuccess = "LOGIN_SUCCESS";
 }
