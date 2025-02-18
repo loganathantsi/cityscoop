@@ -1,6 +1,7 @@
 import 'package:CityScoop/constants/strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'dialog_terms_bloc.dart';
 
 class DialogTerms extends StatelessWidget {
@@ -61,12 +62,15 @@ class DialogTerms extends StatelessWidget {
                   ],
                 ),
                 Expanded(
-                  child: SingleChildScrollView(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 15),
-                      child: Text(
-                        content,
-                        style: TextStyle(color: Colors.black, fontSize: 16),
+                  child: Scrollbar(
+                    thumbVisibility: true,
+                    thickness: 8,
+                    radius: Radius.circular(10),
+                    child: SingleChildScrollView(
+                      controller: ScrollController(),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 15),
+                        child: Html(data: content),
                       ),
                     ),
                   ),

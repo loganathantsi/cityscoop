@@ -2,7 +2,10 @@ import 'package:CityScoop/UI/dialog_terms/dialog_terms_and_conditions.dart';
 import 'package:CityScoop/app/components/utilities.dart';
 import 'package:CityScoop/constants/strings.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:html/parser.dart';
 import 'login_bloc.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -16,13 +19,13 @@ class LoginScreenState extends State<LoginScreen>
     with SingleTickerProviderStateMixin {
 
   final ScrollController _scrollController = ScrollController();
-  final usernameController = TextEditingController(text: '');
-  final passwordController = TextEditingController(text: '');
+  String termsContent = "";
 
   @override
   void initState() {
     super.initState();
     _scrollToTop();
+    readFile();
   }
 
   void _scrollToTop() {
@@ -35,8 +38,16 @@ class LoginScreenState extends State<LoginScreen>
   Widget build(BuildContext context) {
     return BlocConsumer<LoginBloc, LoginState>(
     listener: (context, state) {
-      if (state is LoginSuccessState) {
+      state.currentState == LoginStatus.loading
+          ? EasyLoading.show(status: 'Loading...')
+          : EasyLoading.dismiss();
+      if (state.currentState == LoginStatus.success) {
         dialogTerms();
+      }
+      if (state.currentState == LoginStatus.error) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(state.error!)),
+        );
       }
     },
     builder: (context, state) {
@@ -72,7 +83,7 @@ class LoginScreenState extends State<LoginScreen>
                   ),
                   SizedBox(height: 30),
                   TextField(
-                    controller: usernameController,
+                    controller: state.usernameController,
                     cursorColor: Colors.blue,
                     decoration: InputDecoration(
                       filled: true,
@@ -99,7 +110,7 @@ class LoginScreenState extends State<LoginScreen>
                   ),
                   SizedBox(height: 10),
                   TextField(
-                    controller: passwordController,
+                    controller: state.passwordController,
                     cursorColor: Colors.blue,
                     obscureText: true,
                     decoration: InputDecoration(
@@ -132,8 +143,10 @@ class LoginScreenState extends State<LoginScreen>
                       Transform.scale(
                           scale: 1,
                           child: Checkbox(
-                            value: true,
-                            onChanged: (value) {},
+                            value: state.isRememberMe,
+                            onChanged: (value) {
+                              context.read<LoginBloc>().add(LoginRememberMeEvent(rememberMe: value!));
+                            },
                             checkColor: Colors.black,
                             activeColor: Colors.grey[400],
                             fillColor:
@@ -169,10 +182,23 @@ class LoginScreenState extends State<LoginScreen>
                         ),
                       ),
                       onPressed: () {
-                        context.read<LoginBloc>().add((
+                       if (state.usernameController.text.isEmpty) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('Username is required')),
+                          );
+                          return;
+                        } else if (state.passwordController.text.isEmpty) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('Password is required')),
+                          );
+                          return;
+                        }
+
+                       context.read<LoginBloc>().add(LoginRememberMeEvent(rememberMe: state.isRememberMe));
+                       context.read<LoginBloc>().add((
                             LoginApiEvent(
-                                username: usernameController.text.trim(),
-                                password: passwordController.text.trim()
+                                usernameController: state.usernameController,
+                                passwordController: state.passwordController,
                             )));
                       },
                       child: const Text(
@@ -215,10 +241,16 @@ class LoginScreenState extends State<LoginScreen>
     );
   }
 
+  void readFile() async {
+    String data = await rootBundle.loadString(Strings.termsContent);
+    var document = parse(data);
+    termsContent = document.body?.innerHtml ?? '';
+  }
+
   void dialogTerms() {
     showDialog(
       context: context,
-      builder: (context) => DialogTerms(content: "Terms and Conditions content ..."),
+      builder: (context) => DialogTerms(content: termsContent),
     );
   }
 }

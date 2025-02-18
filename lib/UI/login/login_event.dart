@@ -3,10 +3,13 @@ part of 'login_bloc.dart';
 @immutable
 sealed class LoginEvent {}
 
-class LoginSuccessEvent extends LoginEvent {}
-
 class LoginApiEvent extends LoginEvent {
-  final String username;
-  final String password;
-  LoginApiEvent({ required this.username, required this.password });
+  final TextEditingController usernameController;
+  final TextEditingController passwordController;
+  LoginApiEvent({ required this.usernameController, required this.passwordController});
+}
+
+class LoginRememberMeEvent extends LoginEvent {
+  final bool rememberMe;
+  LoginRememberMeEvent({ required this.rememberMe });
 }

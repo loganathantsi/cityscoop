@@ -8,6 +8,8 @@ class Strings {
   static const String dialogheaderImage = 'assets/images/cs_dialog_header.png';
   static const String closeIcon = 'assets/images/cs_close_icon.png';
 
+  static const String termsContent = 'assets/text/terms.html';
+
   // Url
   static const String baseUrl = 'https://cityscoop.us/api/jwt-auth/v1/'; // Live
 
@@ -17,4 +19,6 @@ class Strings {
 
   static const String accessToken = "ACCESS_TOKEN";
   static const String loginSuccess = "LOGIN_SUCCESS";
+  static const String username = "USERNAME";
+  static const String password = "PASSWORD";
 }
