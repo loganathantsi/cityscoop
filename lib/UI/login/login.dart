@@ -68,9 +68,7 @@ class LoginScreenState extends State<LoginScreen>
                 children: [
                   SizedBox(
                       width: Utilities.getDeviceWidth(context),
-                      height: 100,
-                      child: Image.asset(Strings.logoGrey,
-                          height: 100, fit: BoxFit.fill)),
+                      child: Image.asset(Strings.logoGrey, fit: BoxFit.fill)),
                   SizedBox(height: 40),
                   Text(
                     'SIGN IN',
