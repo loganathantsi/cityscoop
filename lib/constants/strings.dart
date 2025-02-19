@@ -7,6 +7,13 @@ class Strings {
   static const String passwordIcon = 'assets/images/cs_password_icon.png';
   static const String dialogheaderImage = 'assets/images/cs_dialog_header.png';
   static const String closeIcon = 'assets/images/cs_close_icon.png';
+  static const String dashLogo = 'assets/images/cs_dashboard_logo.png';
+  static const String logoutIcon = 'assets/images/cs_logout_icon.png';
+  static const String notificationIcon = 'assets/images/cs_notification_icon.png';
+  static const String dashCalenderLogo = 'assets/images/cs_dash_calender.png';
+  static const String dashProfileLogo = 'assets/images/cs_dash_profile.png';
+  static const String dashUploadPhotoLogo = 'assets/images/cs_upload_photo.svg';
+  static const String dashUploadVideoLogo = 'assets/images/cs_upload_video.svg';
 
   static const String termsContent = 'assets/text/terms.html';
 

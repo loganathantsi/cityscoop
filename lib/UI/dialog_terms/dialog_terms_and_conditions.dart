@@ -1,3 +1,4 @@
+import 'package:CityScoop/UI/dashboard/dashboard.dart';
 import 'package:CityScoop/constants/strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -6,15 +7,19 @@ import 'dialog_terms_bloc.dart';
 
 class DialogTerms extends StatelessWidget {
   final String content;
+  final ScrollController scrollController = ScrollController();
 
-  const DialogTerms({super.key, required this.content});
+  DialogTerms({super.key, required this.content});
 
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<DialogTermsBloc, DialogTermsState>(
       listener: (context, state) {
-        if (state is DialogTermsAcceptedState || state is DialogTermsClosedState) {
+        if (state is DialogTermsClosedState) {
           Navigator.of(context).pop();
+        }
+        if (state is DialogTermsAcceptedState) {
+          Navigator.push(context, MaterialPageRoute(builder: (context) => DashboardScreen()));
         }
       },
       builder: (context, state) {
@@ -63,11 +68,12 @@ class DialogTerms extends StatelessWidget {
                 ),
                 Expanded(
                   child: Scrollbar(
+                    controller: scrollController,
                     thumbVisibility: true,
                     thickness: 8,
                     radius: Radius.circular(10),
                     child: SingleChildScrollView(
-                      controller: ScrollController(),
+                      controller: scrollController,
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 15),
                         child: Html(data: content),
