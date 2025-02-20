@@ -1,7 +1,6 @@
 import 'package:CityScoop/app/components/utilities.dart';
 import 'package:CityScoop/constants/strings.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -18,7 +17,7 @@ class DashboardScreenState extends State<DashboardScreen> {
         child: Container(
           color: Colors.black,
           child: Column(
-            // crossAxisAlignment: CrossAxisAlignment.stretch,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Container(
                   color: Colors.white,
@@ -77,7 +76,7 @@ class DashboardScreenState extends State<DashboardScreen> {
                     child: Container(
                         padding: EdgeInsets.all(10),
                         width: Utilities.getDeviceWidth(context) / 2,
-                        height: 150,
+                        height: 125,
                         child: Image.asset(Strings.dashProfileLogo, alignment: Alignment.center)),
                   ),
                   InkWell(
@@ -85,55 +84,74 @@ class DashboardScreenState extends State<DashboardScreen> {
                     child: Container(
                         padding: EdgeInsets.all(10),
                         width: Utilities.getDeviceWidth(context) / 2,
-                        height: 150,
+                        height: 125,
                         child: Image.asset(Strings.dashCalenderLogo, alignment: Alignment.center)),
                   ),
                 ],),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  InkWell(
-                    onTap: () {},
-                    child: Container(
-                        padding: EdgeInsets.all(10),
-                        width: Utilities.getDeviceWidth(context) / 2,
-                        height: 150,
-                        child: SvgPicture.asset(Strings.dashUploadVideoLogo,
-
-                        )),
+              Expanded(child: SizedBox()),
+              Padding(
+                padding: const EdgeInsets.all(15),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white, // Background color
+                    borderRadius: BorderRadius.circular(10), // Rounded corners
                   ),
-                  InkWell(
-                    onTap: () {},
-                    child: Container(
-                        padding: EdgeInsets.all(10),
-                        width: Utilities.getDeviceWidth(context) / 2,
-                        height: 150,
-                        child: SvgPicture.asset(Strings.dashUploadPhotoLogo,
-
-                        )),
+                  padding: EdgeInsets.fromLTRB(5, 10, 5, 10),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text("UPLOAD", style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold)),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          InkWell(
+                            onTap: () {},
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                SizedBox(
+                                    width: Utilities.getDeviceWidth(context) / 6,
+                                    height: 60,
+                                    child: Image.asset(Strings.dashUploadVideoLogo)),
+                                SizedBox(width: 90, height: 40, child: Text("UPLOAD VIDEO", textAlign: TextAlign.center, style: TextStyle(color: Colors.black, fontSize: 15, fontWeight: FontWeight.bold))),
+                              ],
+                            ),
+                          ),
+                          InkWell(
+                            onTap: () {},
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                SizedBox(
+                                    width: Utilities.getDeviceWidth(context) / 6,
+                                    height: 60,
+                                    child: Image.asset(Strings.dashUploadPhotoLogo, alignment: Alignment.center)),
+                                SizedBox(width: 90, height: 40, child: Text("UPLOAD PHOTO", textAlign: TextAlign.center, style: TextStyle(color: Colors.black, fontSize: 15, fontWeight: FontWeight.bold))),
+                              ],
+                            ),
+                          ),
+                        ],),
+                    ],
                   ),
-                ],),
+                ),
+              ),
             ],
           ),
         ),
       ),
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: ElevatedButton(
-          onPressed: () {},
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.blue,
-            padding: EdgeInsets.symmetric(vertical: 12),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-          ),
-          child: Text(
-            "Home",
-            style: TextStyle(fontSize: 18, color: Colors.white),
-          ),
-        ),
-      ),
+      bottomNavigationBar: Container(
+          padding: EdgeInsets.fromLTRB(5, 3, 5, 0),
+          color: Colors.white,
+          height: 50,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              InkWell(onTap:() {}, child: Image.asset(Strings.homeIcon, alignment: Alignment.center, height: 25)),
+              InkWell(onTap:() {}, child: Text("HOME", textAlign: TextAlign.center, style: TextStyle(color: Colors.grey, fontSize: 14, fontWeight: FontWeight.bold))),
+              Expanded(child: SizedBox()),
+              SizedBox(width: 120, child: Divider(color: Colors.red, height: 2)),
+            ],
+          )),
     );
   }
 }

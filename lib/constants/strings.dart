@@ -12,8 +12,9 @@ class Strings {
   static const String notificationIcon = 'assets/images/cs_notification_icon.png';
   static const String dashCalenderLogo = 'assets/images/cs_dash_calender.png';
   static const String dashProfileLogo = 'assets/images/cs_dash_profile.png';
-  static const String dashUploadPhotoLogo = 'assets/images/cs_upload_photo.svg';
-  static const String dashUploadVideoLogo = 'assets/images/cs_upload_video.svg';
+  static const String dashUploadPhotoLogo = 'assets/images/cs_upload_photo.png';
+  static const String dashUploadVideoLogo = 'assets/images/cs_upload_video.png';
+  static const String homeIcon = 'assets/images/cs_home_icon.png';
 
   static const String termsContent = 'assets/text/terms.html';
 
