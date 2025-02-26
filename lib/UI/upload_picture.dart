@@ -23,17 +23,13 @@ class UploadPictureState extends State<UploadPicture> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              GestureDetector(
-                onTap: () {
-
-                },
-                child: Container(
-                    color: Colors.white,
-                    padding: EdgeInsets.all(15),
-                    width: Utilities.getDeviceWidth(context),
-                    height: 100,
-                    child: Image.asset(Strings.logoGrey, fit: BoxFit.scaleDown)),
-              ),
+              Container(
+                  color: Colors.white,
+                  padding: EdgeInsets.all(15),
+                  width: Utilities.getDeviceWidth(context),
+                  height: 100,
+                  child: Image.asset(Strings.logoGrey, fit: BoxFit.scaleDown)),
+              Divider(height: 1, color: Colors.grey.shade200),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [

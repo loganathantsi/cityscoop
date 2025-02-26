@@ -1,6 +1,7 @@
 import 'package:CityScoop/UI/dialog_logout.dart';
 import 'package:CityScoop/UI/dialog_notifications.dart';
 import 'package:CityScoop/UI/upload_picture.dart';
+import 'package:CityScoop/UI/upload_video.dart';
 import 'package:CityScoop/app/components/utilities.dart';
 import 'package:CityScoop/constants/strings.dart';
 import 'package:flutter/material.dart';
@@ -116,7 +117,9 @@ class DashboardScreenState extends State<DashboardScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           GestureDetector(
-                            onTap: () {},
+                            onTap: () {
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => UploadVideo()));
+                            },
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
