@@ -1,12 +1,12 @@
-import 'package:CityScoop/UI/dialog_terms/dialog_terms_and_conditions.dart';
+import 'package:CityScoop/UI/dialog_terms_and_conditions.dart';
+import 'package:CityScoop/api/repository.dart';
 import 'package:CityScoop/app/components/utilities.dart';
 import 'package:CityScoop/constants/strings.dart';
+import 'package:CityScoop/model/login_response_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:html/parser.dart';
-import 'login_bloc.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -15,11 +15,13 @@ class LoginScreen extends StatefulWidget {
   State<LoginScreen> createState() => LoginScreenState();
 }
 
-class LoginScreenState extends State<LoginScreen>
-    with SingleTickerProviderStateMixin {
+class LoginScreenState extends State<LoginScreen> with SingleTickerProviderStateMixin {
 
   final ScrollController _scrollController = ScrollController();
+  TextEditingController usernameController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
   String termsContent = "";
+  bool isRememberMe = false;
 
   @override
   void initState() {
@@ -36,21 +38,6 @@ class LoginScreenState extends State<LoginScreen>
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<LoginBloc, LoginState>(
-    listener: (context, state) {
-      state.currentState == LoginStatus.loading
-          ? EasyLoading.show(status: 'Loading...')
-          : EasyLoading.dismiss();
-      if (state.currentState == LoginStatus.success) {
-        dialogTerms();
-      }
-      if (state.currentState == LoginStatus.error) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(state.error!)),
-        );
-      }
-    },
-    builder: (context, state) {
     return Scaffold(
       backgroundColor: Colors.grey[200],
       body: Center(
@@ -81,7 +68,7 @@ class LoginScreenState extends State<LoginScreen>
                   ),
                   SizedBox(height: 30),
                   TextField(
-                    controller: state.usernameController,
+                    controller: usernameController,
                     cursorColor: Colors.blue,
                     decoration: InputDecoration(
                       filled: true,
@@ -108,7 +95,7 @@ class LoginScreenState extends State<LoginScreen>
                   ),
                   SizedBox(height: 10),
                   TextField(
-                    controller: state.passwordController,
+                    controller: passwordController,
                     cursorColor: Colors.blue,
                     obscureText: true,
                     decoration: InputDecoration(
@@ -141,9 +128,11 @@ class LoginScreenState extends State<LoginScreen>
                       Transform.scale(
                           scale: 1,
                           child: Checkbox(
-                            value: state.isRememberMe,
+                            value: isRememberMe,
                             onChanged: (value) {
-                              context.read<LoginBloc>().add(LoginRememberMeEvent(rememberMe: value!));
+                              setState(() {
+                                isRememberMe = value ?? false;
+                              });
                             },
                             checkColor: Colors.black,
                             activeColor: Colors.grey[400],
@@ -179,25 +168,26 @@ class LoginScreenState extends State<LoginScreen>
                               borderRadius: BorderRadius.circular(5)),
                         ),
                       ),
-                      onPressed: () {
-                       if (state.usernameController.text.isEmpty) {
+                      onPressed: () async {
+                       if (usernameController.text.isEmpty) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(content: Text('Username is required')),
                           );
                           return;
-                        } else if (state.passwordController.text.isEmpty) {
+                        } else if (passwordController.text.isEmpty) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(content: Text('Password is required')),
                           );
                           return;
                         }
-
-                       context.read<LoginBloc>().add(LoginRememberMeEvent(rememberMe: state.isRememberMe));
-                       context.read<LoginBloc>().add((
-                            LoginApiEvent(
-                                usernameController: state.usernameController,
-                                passwordController: state.passwordController,
-                            )));
+                       if (isRememberMe) {
+                         Utilities.setStringPreference(Strings.username, usernameController.text);
+                         Utilities.setStringPreference(Strings.password, passwordController.text);
+                       } else {
+                         Utilities.setStringPreference(Strings.username, "");
+                         Utilities.setStringPreference(Strings.password, "");
+                       }
+                       loginApi();
                       },
                       child: const Text(
                         'LOGIN',
@@ -235,7 +225,25 @@ class LoginScreenState extends State<LoginScreen>
         ),
       ),
     );
-    },
+  }
+
+  Future<void> loginApi() async {
+    EasyLoading.show(status: 'Loading...');
+    final LoginResponse? loginResponse = await CityScoopRepository().callLoginApi(usernameController.text, passwordController.text);
+    if (loginResponse != null) {
+      EasyLoading.dismiss();
+      Utilities.setStringPreference(Strings.accessToken, loginResponse.token);
+      Utilities.setBoolPreference(Strings.loginSuccess, true);
+      dialogTerms();
+    } else {
+      EasyLoading.dismiss();
+      error();
+    }
+  }
+
+  void error() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Invalid username and password')),
     );
   }
 

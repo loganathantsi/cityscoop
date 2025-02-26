@@ -1,9 +1,7 @@
-import 'package:CityScoop/UI/dashboard/dashboard.dart';
+import 'package:CityScoop/UI/dashboard.dart';
 import 'package:CityScoop/constants/strings.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_html/flutter_html.dart';
-import 'dialog_terms_bloc.dart';
 
 class DialogTerms extends StatelessWidget {
   final String content;
@@ -13,19 +11,9 @@ class DialogTerms extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<DialogTermsBloc, DialogTermsState>(
-      listener: (context, state) {
-        if (state is DialogTermsClosedState) {
-          Navigator.of(context).pop();
-        }
-        if (state is DialogTermsAcceptedState) {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => DashboardScreen()));
-        }
-      },
-      builder: (context, state) {
-        return Dialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-          backgroundColor: Colors.white,
+    return Dialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      backgroundColor: Colors.white,
           child: SizedBox(
             height: MediaQuery.of(context).size.height * 0.6,
             child: Column(
@@ -51,7 +39,7 @@ class DialogTerms extends StatelessWidget {
                       right: 10,
                       child: InkWell(
                         onTap: () {
-                          context.read<DialogTermsBloc>().add(DialogTermsCloseEvent());
+                          Navigator.of(context).pop();
                         },
                         child: Container(
                           decoration: BoxDecoration(
@@ -95,7 +83,7 @@ class DialogTerms extends StatelessWidget {
                         ),
                       ),
                       onPressed: () {
-                        context.read<DialogTermsBloc>().add(DialogTermsAcceptEvent());
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => DashboardScreen()));
                       },
                       child: Text('ACCEPT',
                         style: TextStyle(fontSize: 18, color: Colors.white),
@@ -107,7 +95,5 @@ class DialogTerms extends StatelessWidget {
             ),
           ),
         );
-      },
-    );
   }
 }

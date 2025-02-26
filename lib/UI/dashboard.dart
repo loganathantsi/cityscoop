@@ -32,10 +32,11 @@ class DashboardScreenState extends State<DashboardScreen> {
                 children: [
                 Column(
                   children: [
-                    InkWell(
+                    GestureDetector(
                       onTap: () {
-                          print("Notifications");
-                          DialogNotifications();
+                        setState(() {
+                          dialogNotifications();
+                        });
                       },
                       child: Container(
                           padding: EdgeInsets.all(10),
@@ -52,7 +53,7 @@ class DashboardScreenState extends State<DashboardScreen> {
                 ),
                 Column(
                   children: [
-                    InkWell(
+                    GestureDetector(
                       onTap: () {},
                       child: Container(
                           padding: EdgeInsets.all(10),
@@ -76,7 +77,7 @@ class DashboardScreenState extends State<DashboardScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  InkWell(
+                  GestureDetector(
                     onTap: () {},
                     child: Container(
                         padding: EdgeInsets.all(10),
@@ -84,7 +85,7 @@ class DashboardScreenState extends State<DashboardScreen> {
                         height: 125,
                         child: Image.asset(Strings.dashProfileLogo, alignment: Alignment.center)),
                   ),
-                  InkWell(
+                  GestureDetector(
                     onTap: () {},
                     child: Container(
                         padding: EdgeInsets.all(10),
@@ -109,7 +110,7 @@ class DashboardScreenState extends State<DashboardScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          InkWell(
+                          GestureDetector(
                             onTap: () {},
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.center,
@@ -122,9 +123,9 @@ class DashboardScreenState extends State<DashboardScreen> {
                               ],
                             ),
                           ),
-                          InkWell(
-                            onTap: () {
-                              UploadPicture();
+                          GestureDetector(
+                            onTap:() {
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => UploadPicture()));
                             },
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.center,
@@ -153,12 +154,19 @@ class DashboardScreenState extends State<DashboardScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              InkWell(onTap:() {}, child: Image.asset(Strings.homeIcon, alignment: Alignment.center, height: 25)),
-              InkWell(onTap:() {}, child: Text("HOME", textAlign: TextAlign.center, style: TextStyle(color: Colors.grey, fontSize: 14, fontWeight: FontWeight.bold))),
+              GestureDetector(onTap:() {}, child: Image.asset(Strings.homeIcon, alignment: Alignment.center, height: 25)),
+              GestureDetector(onTap:() {}, child: Text("HOME", textAlign: TextAlign.center, style: TextStyle(color: Colors.grey, fontSize: 14, fontWeight: FontWeight.bold))),
               Expanded(child: SizedBox()),
               SizedBox(width: 120, child: Divider(color: Colors.red, height: 2)),
             ],
           )),
+    );
+  }
+
+  void dialogNotifications() {
+    showDialog(
+      context: context,
+      builder: (context) => DialogNotifications(),
     );
   }
 }

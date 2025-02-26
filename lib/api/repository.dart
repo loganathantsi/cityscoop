@@ -21,15 +21,15 @@ class CityScoopRepository {
     return Uri.parse("");
   }
 
-  Future<LoginResponse?> callLoginApi(LoginRequest loginRequest) async {
+  Future<LoginResponse?> callLoginApi(String username, String password) async {
     final loginUrl = Strings.baseUrl + Strings.token;
 
     final http.Response response = await client.post(
         getUri(loginUrl),
         headers: Utilities.getHeadersWithoutToken(),
         body: jsonEncode({
-          'username': loginRequest.username,
-          'password': loginRequest.password,
+          'username': username,
+          'password': password,
         }));
 
     if (response.statusCode == 200) {

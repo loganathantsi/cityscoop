@@ -17,21 +17,22 @@ class DialogNotifications extends StatelessWidget {
                 Stack(
                   alignment: AlignmentDirectional.center,
                   children: [
+                    SizedBox(width: MediaQuery.of(context).size.width, height: 80),
                     Positioned(
-                      top: 30,
+                      top: 15,
                       child: Center(
                         child: Text(
                           "Notifications",
-                          style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+                          style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold),
                         ),
                       ),
                     ),
                     Positioned(
-                      top: 10,
-                      right: 10,
-                      child: InkWell(
+                      top: 15,
+                      right: 15,
+                      child: GestureDetector(
                         onTap: () {
-
+                          Navigator.of(context).pop();
                         },
                         child: Container(
                           decoration: BoxDecoration(
