@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
 
 class DialogNotifications extends StatelessWidget {
-  final ScrollController scrollController = ScrollController();
-
   DialogNotifications({super.key});
+
+  final ScrollController scrollController = ScrollController();
+  StateSetter? dialogNotificationsState;
 
   @override
   Widget build(BuildContext context) {
-    return Dialog(
+    return StatefulBuilder(builder: (BuildContext context, StateSetter setState) {
+      dialogNotificationsState = setState;
+
+      return Dialog(
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
           backgroundColor: Colors.white,
           child: SizedBox(
@@ -51,5 +55,6 @@ class DialogNotifications extends StatelessWidget {
             ),
           ),
         );
+    });
   }
 }

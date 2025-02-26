@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 
 class DialogLogout extends StatelessWidget {
+  DialogLogout({super.key});
 
-  const DialogLogout({super.key});
+  StateSetter? dialogLogoutState;
 
   @override
   Widget build(BuildContext context) {
+    return StatefulBuilder(builder: (BuildContext context, StateSetter setState) {
+      dialogLogoutState = setState;
+
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       backgroundColor: Colors.white,
@@ -45,7 +49,9 @@ class DialogLogout extends StatelessWidget {
                         ),
                       ),
                       onPressed: () {
+                        dialogLogoutState?.call((){
 
+                        });
                       },
                       child: Text('Yes',
                         style: TextStyle(fontSize: 18, color: Colors.white),
@@ -85,5 +91,6 @@ class DialogLogout extends StatelessWidget {
         ),
       ),
     );
+    });
   }
 }

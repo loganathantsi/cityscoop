@@ -4,6 +4,7 @@ import 'package:CityScoop/UI/upload_picture.dart';
 import 'package:CityScoop/UI/upload_video.dart';
 import 'package:CityScoop/app/components/utilities.dart';
 import 'package:CityScoop/constants/strings.dart';
+import 'package:CityScoop/widgets/bottom_navigation.dart';
 import 'package:flutter/material.dart';
 
 class DashboardScreen extends StatefulWidget {
@@ -155,23 +156,7 @@ class DashboardScreenState extends State<DashboardScreen> {
           ),
         ),
       ),
-      bottomNavigationBar: Container(
-          padding: EdgeInsets.fromLTRB(5, 3, 5, 0),
-          color: Colors.white,
-          height: 50,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              GestureDetector(onTap:() {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => DashboardScreen()));
-              }, child: Image.asset(Strings.homeIcon, alignment: Alignment.center, height: 25)),
-              GestureDetector(onTap:() {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => DashboardScreen()));
-              }, child: Text("HOME", textAlign: TextAlign.center, style: TextStyle(color: Colors.grey, fontSize: 14, fontWeight: FontWeight.bold))),
-              Expanded(child: SizedBox()),
-              SizedBox(width: 120, child: Divider(color: Colors.red, height: 2)),
-            ],
-          )),
+      bottomNavigationBar: BottomNavigation(),
     );
   }
 

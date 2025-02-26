@@ -4,16 +4,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 
 class DialogTerms extends StatelessWidget {
+  DialogTerms({super.key, required this.content});
+
   final String content;
   final ScrollController scrollController = ScrollController();
-
-  DialogTerms({super.key, required this.content});
+  StateSetter? dialogTermsState;
 
   @override
   Widget build(BuildContext context) {
-    return Dialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      backgroundColor: Colors.white,
+    return StatefulBuilder(builder: (BuildContext context, StateSetter setState) {
+      dialogTermsState = setState;
+
+      return Dialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        backgroundColor: Colors.white,
           child: SizedBox(
             height: MediaQuery.of(context).size.height * 0.6,
             child: Column(
@@ -83,7 +87,9 @@ class DialogTerms extends StatelessWidget {
                         ),
                       ),
                       onPressed: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => DashboardScreen()));
+                        dialogTermsState?.call(() {
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => DashboardScreen()));
+                        });
                       },
                       child: Text('ACCEPT',
                         style: TextStyle(fontSize: 18, color: Colors.white),
@@ -95,5 +101,6 @@ class DialogTerms extends StatelessWidget {
             ),
           ),
         );
+    });
   }
 }
