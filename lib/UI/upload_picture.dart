@@ -1,3 +1,4 @@
+import 'package:CityScoop/UI/dashboard.dart';
 import 'package:CityScoop/app/components/utilities.dart';
 import 'package:CityScoop/constants/strings.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +11,9 @@ class UploadPicture extends StatefulWidget {
 }
 
 class UploadPictureState extends State<UploadPicture> {
+
+  bool isSwitch = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,9 +23,9 @@ class UploadPictureState extends State<UploadPicture> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              InkWell(
+              GestureDetector(
                 onTap: () {
-                  showImagePickerSnackbar(context);
+
                 },
                 child: Container(
                     color: Colors.white,
@@ -39,45 +43,80 @@ class UploadPictureState extends State<UploadPicture> {
                       height: 125,
                       child: Image.asset(Strings.dashUploadPhotoLogo, alignment: Alignment.center, fit: BoxFit.fill)),
                   SizedBox(height: 40, child: Text("UPLOAD PICTURE", textAlign: TextAlign.center, style: TextStyle(color: Colors.black, fontSize: 16))),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      SizedBox(child: Text("Show logo")),
-                      Center(
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            const Text("OFF"),
-                            Switch(
-                              value: true,
-                              onChanged: (value) {
-                                setState(() {
-                                  // isSwitched = value;
-                                });
-                              },
-                              activeColor: Colors.green, // Color when switch is ON
-                              inactiveThumbColor: Colors.grey, // Color when switch is OFF
-                            ),
-                            const Text("ON"),
-                          ],
+                  Padding(
+                    padding: const EdgeInsets.all(12),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        SizedBox(child: Text("Show logo")),
+                        Center(
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Stack(
+                                alignment: Alignment.center,
+                                children: [
+                                  Transform.scale(
+                                    scaleX: 1.1,
+                                    scaleY: 1,
+                                    child: Switch(
+                                      value: isSwitch,
+                                      onChanged: (value) {
+                                        setState(() {
+                                          isSwitch = value;
+                                        });
+                                      },
+                                      trackOutlineColor: WidgetStateProperty.resolveWith<Color?>(
+                                            (Set<WidgetState> states) {
+                                          if (states.contains(WidgetState.selected)) {
+                                            return Colors.grey.shade300; // Outline color when switch is ON
+                                          }
+                                          return Colors.grey.shade300; // Outline color when switch is OFF
+                                        },
+                                      ),
+                                      activeColor: Colors.red,
+                                      activeTrackColor: Colors.white,
+                                      inactiveThumbColor: Colors.grey.shade400,
+                                      inactiveTrackColor: Colors.white,
+                                    ),
+                                  ),
+                                  Positioned(
+                                    left: isSwitch ? 10 : 30, // Adjust position based on switch state
+                                    child: Text(
+                                      isSwitch ? "ON" : "OFF",
+                                      style: TextStyle(
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.bold,
+                                        color: isSwitch ? Colors.red : Colors.grey,
+                                      ),
+                                    ),
+                                  ),
+                                ]
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                   SizedBox(
-                    width: 125,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.red[800],
-                        padding: const EdgeInsets.symmetric(vertical: 5),
-                      ).copyWith(
-                        shape: WidgetStateProperty.all(
-                          RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+                    width: Utilities.getDeviceWidth(context),
+                    height: 75,
+                    child: Padding(
+                      padding: const EdgeInsets.all(12),
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.red[800],
+                          padding: const EdgeInsets.symmetric(vertical: 5),
+                        ).copyWith(
+                          shape: WidgetStateProperty.all(
+                            RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+                          ),
                         ),
-                      ),
-                      onPressed: () {},
-                      child: Text('SUBMIT',
-                        style: TextStyle(fontSize: 18, color: Colors.white),
+                        onPressed: () {},
+                        child: Text('SUBMIT',
+                          style: TextStyle(fontSize: 18, color: Colors.white),
+                        ),
                       ),
                     ),
                   ),
@@ -94,48 +133,16 @@ class UploadPictureState extends State<UploadPicture> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              InkWell(onTap:() {}, child: Image.asset(Strings.homeIcon, alignment: Alignment.center, height: 25)),
-              InkWell(onTap:() {}, child: Text("HOME", textAlign: TextAlign.center, style: TextStyle(color: Colors.grey, fontSize: 14, fontWeight: FontWeight.bold))),
+              GestureDetector(onTap:() {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => DashboardScreen()));
+              }, child: Image.asset(Strings.homeIcon, alignment: Alignment.center, height: 25)),
+              GestureDetector(onTap:() {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => DashboardScreen()));
+              }, child: Text("HOME", textAlign: TextAlign.center, style: TextStyle(color: Colors.grey, fontSize: 14, fontWeight: FontWeight.bold))),
               Expanded(child: SizedBox()),
               SizedBox(width: 120, child: Divider(color: Colors.red, height: 2)),
             ],
           )),
     );
   }
-
-  void showImagePickerSnackbar(BuildContext context) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text("Choose an option"),
-        duration: Duration(seconds: 5), // Adjust as needed
-        action: SnackBarAction(
-          label: "Camera",
-          onPressed: () {
-            // Open Camera
-            print("Camera Selected");
-            // Implement your camera logic here
-          },
-        ),
-      ),
-    );
-
-    // Delay for second action so both options are visible
-    Future.delayed(Duration(milliseconds: 100), () {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text("Choose an option"),
-          duration: Duration(seconds: 5),
-          action: SnackBarAction(
-            label: "Gallery",
-            onPressed: () {
-              // Open Gallery
-              print("Gallery Selected");
-              // Implement your gallery logic here
-            },
-          ),
-        ),
-      );
-    });
-  }
-
 }

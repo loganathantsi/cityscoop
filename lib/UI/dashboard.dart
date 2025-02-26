@@ -1,3 +1,4 @@
+import 'package:CityScoop/UI/dialog_logout.dart';
 import 'package:CityScoop/UI/dialog_notifications.dart';
 import 'package:CityScoop/UI/upload_picture.dart';
 import 'package:CityScoop/app/components/utilities.dart';
@@ -30,43 +31,47 @@ class DashboardScreenState extends State<DashboardScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                Column(
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          dialogNotifications();
-                        });
-                      },
-                      child: Container(
+                GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      dialogNotifications();
+                    });
+                  },
+                  child: Column(
+                    children: [
+                      Container(
                           padding: EdgeInsets.all(10),
                           width: Utilities.getDeviceWidth(context) * 0.25,
                           height: 50,
                           child: Image.asset(Strings.notificationIcon, alignment: Alignment.center)),
-                    ),
-                    Container(
-                        padding: EdgeInsets.fromLTRB(10, 0, 10, 5),
-                        width: Utilities.getDeviceWidth(context) * 0.25,
-                        height: 50,
-                        child: Text("NOTICES", style: TextStyle(color: Colors.grey), textAlign: TextAlign.center)),
-                  ],
+                      Container(
+                          padding: EdgeInsets.fromLTRB(10, 0, 10, 5),
+                          width: Utilities.getDeviceWidth(context) * 0.25,
+                          height: 50,
+                          child: Text("NOTICES", style: TextStyle(color: Colors.grey), textAlign: TextAlign.center)),
+                    ],
+                  ),
                 ),
-                Column(
-                  children: [
-                    GestureDetector(
-                      onTap: () {},
-                      child: Container(
+                GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      dialogLogout();
+                    });
+                  },
+                  child: Column(
+                    children: [
+                      Container(
                           padding: EdgeInsets.all(10),
                           width: Utilities.getDeviceWidth(context) * 0.15,
                           height: 50,
                           child: Image.asset(Strings.logoutIcon, alignment: Alignment.center)),
-                    ),
-                    Container(
-                        padding: EdgeInsets.fromLTRB(10, 0, 10, 5),
-                        width: Utilities.getDeviceWidth(context) * 0.25,
-                        height: 50,
-                        child: Text("LOG OUT", style: TextStyle(color: Colors.grey), textAlign: TextAlign.center)),
-                  ],
+                      Container(
+                          padding: EdgeInsets.fromLTRB(10, 0, 10, 5),
+                          width: Utilities.getDeviceWidth(context) * 0.25,
+                          height: 50,
+                          child: Text("LOG OUT", style: TextStyle(color: Colors.grey), textAlign: TextAlign.center)),
+                    ],
+                  ),
                 ),
               ],),
               Container(
@@ -154,8 +159,12 @@ class DashboardScreenState extends State<DashboardScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              GestureDetector(onTap:() {}, child: Image.asset(Strings.homeIcon, alignment: Alignment.center, height: 25)),
-              GestureDetector(onTap:() {}, child: Text("HOME", textAlign: TextAlign.center, style: TextStyle(color: Colors.grey, fontSize: 14, fontWeight: FontWeight.bold))),
+              GestureDetector(onTap:() {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => DashboardScreen()));
+              }, child: Image.asset(Strings.homeIcon, alignment: Alignment.center, height: 25)),
+              GestureDetector(onTap:() {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => DashboardScreen()));
+              }, child: Text("HOME", textAlign: TextAlign.center, style: TextStyle(color: Colors.grey, fontSize: 14, fontWeight: FontWeight.bold))),
               Expanded(child: SizedBox()),
               SizedBox(width: 120, child: Divider(color: Colors.red, height: 2)),
             ],
@@ -167,6 +176,13 @@ class DashboardScreenState extends State<DashboardScreen> {
     showDialog(
       context: context,
       builder: (context) => DialogNotifications(),
+    );
+  }
+
+  void dialogLogout() {
+    showDialog(
+      context: context,
+      builder: (context) => DialogLogout(),
     );
   }
 }
