@@ -1,3 +1,5 @@
+import 'package:CityScoop/UI/dialog_notifications.dart';
+import 'package:CityScoop/UI/upload_picture.dart';
 import 'package:CityScoop/app/components/utilities.dart';
 import 'package:CityScoop/constants/strings.dart';
 import 'package:flutter/material.dart';
@@ -31,7 +33,10 @@ class DashboardScreenState extends State<DashboardScreen> {
                 Column(
                   children: [
                     InkWell(
-                      onTap: () {},
+                      onTap: () {
+                          print("Notifications");
+                          DialogNotifications();
+                      },
                       child: Container(
                           padding: EdgeInsets.all(10),
                           width: Utilities.getDeviceWidth(context) * 0.25,
@@ -118,7 +123,9 @@ class DashboardScreenState extends State<DashboardScreen> {
                             ),
                           ),
                           InkWell(
-                            onTap: () {},
+                            onTap: () {
+                              UploadPicture();
+                            },
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
