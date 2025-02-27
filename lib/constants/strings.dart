@@ -19,11 +19,14 @@ class Strings {
   static const String termsContent = 'assets/text/terms.html';
 
   // Url
-  static const String baseUrl = 'https://cityscoop.us/api/jwt-auth/v1/'; // Live
+  static const String baseUrl = 'https://cityscoop.us/api/jwt-auth/v1/';
+  static const String baseURL = 'https://cityscoop.us/api/app/';
 
   // api
   static const String login = "login/";
   static const String token = "token/";
+  static const String registerAppSignup = "users/register_app_signup";
+  static const String postPublishNotifications = "users/post_publish_notifications";
 
   static const String accessToken = "ACCESS_TOKEN";
   static const String loginSuccess = "LOGIN_SUCCESS";

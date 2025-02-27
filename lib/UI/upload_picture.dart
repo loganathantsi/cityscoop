@@ -79,7 +79,7 @@ class UploadPictureState extends State<UploadPicture> {
                                           return Colors.grey.shade300; // Outline color when switch is OFF
                                         },
                                       ),
-                                      activeColor: Colors.red,
+                                      activeColor: Colors.red.shade800,
                                       activeTrackColor: Colors.white,
                                       inactiveThumbColor: Colors.grey.shade400,
                                       inactiveTrackColor: Colors.white,
@@ -98,7 +98,7 @@ class UploadPictureState extends State<UploadPicture> {
                                         style: TextStyle(
                                           fontSize: 10,
                                           fontWeight: FontWeight.bold,
-                                          color: isSwitch ? Colors.red : Colors.grey,
+                                          color: isSwitch ? Colors.red.shade800 : Colors.grey,
                                         ),
                                       ),
                                     ),

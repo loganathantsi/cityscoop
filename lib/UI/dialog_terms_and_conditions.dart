@@ -1,6 +1,10 @@
 import 'package:CityScoop/UI/dashboard.dart';
+import 'package:CityScoop/api/repository.dart';
 import 'package:CityScoop/constants/strings.dart';
+import 'package:CityScoop/model/post_publish_notifications_response_model.dart';
+import 'package:CityScoop/model/register_app_signup_response_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_html/flutter_html.dart';
 
 class DialogTerms extends StatelessWidget {
@@ -88,7 +92,7 @@ class DialogTerms extends StatelessWidget {
                       ),
                       onPressed: () {
                         dialogTermsState?.call(() {
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => DashboardScreen()));
+                          registerAppSignupApi(context);
                         });
                       },
                       child: Text('ACCEPT',
@@ -103,4 +107,29 @@ class DialogTerms extends StatelessWidget {
         );
     });
   }
+
+  Future<void> registerAppSignupApi(BuildContext context) async {
+    EasyLoading.show(status: 'Loading...');
+    final RegisterAppSignUp? registerAppSignUp = await CityScoopRepository().registerAppSignupApi();
+    if (registerAppSignUp != null) {
+      if(context.mounted){
+        postPublishNotificationsApi(context);
+      }
+    } else {
+      EasyLoading.dismiss();
+    }
+  }
+
+  Future<void> postPublishNotificationsApi(BuildContext context) async {
+    final PostPublishNotifications? postPublishNotifications = await CityScoopRepository().postPublishNotificationsApi();
+    if (postPublishNotifications != null) {
+      EasyLoading.dismiss();
+      if(context.mounted){
+        Navigator.push(context, MaterialPageRoute(builder: (context) => DashboardScreen()));
+      }
+    } else {
+      EasyLoading.dismiss();
+    }
+  }
+
 }
