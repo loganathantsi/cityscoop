@@ -101,13 +101,13 @@ class DialogNotifications extends StatelessWidget {
                             ],
                           ),
                         ),
-                        Positioned(
+                        if (postPublishNotifications?.data[index].read == "0") Positioned(
                           top: 12,
                           right: 40,
                           child:  GestureDetector(
                             child: Image.asset(Strings.readIcon, alignment: Alignment.center, height: 25, width: 25),
                             onTap: () async {
-                              await CityScoopRepository().updateNotificationsApi(id: postPublishNotifications?.data[index].id ?? "", type: postPublishNotifications?.data[index].type ?? "", read: 1, delete: 0);
+                              await CityScoopRepository().updateNotificationsApi(updateId: postPublishNotifications?.data[index].id ?? "", type: postPublishNotifications?.data[index].type ?? "", read: 1, delete: 0);
                             },
                           ),
                         ),
@@ -117,7 +117,7 @@ class DialogNotifications extends StatelessWidget {
                           child: IconButton(
                             icon: Icon(Icons.close, color: Colors.red.shade800),
                             onPressed: () async {
-                              await CityScoopRepository().updateNotificationsApi(id: postPublishNotifications?.data[index].id ?? "", type: postPublishNotifications?.data[index].type ?? "", read: 0, delete: 1);
+                              await CityScoopRepository().updateNotificationsApi(updateId: postPublishNotifications?.data[index].id ?? "", type: postPublishNotifications?.data[index].type ?? "", read: 0, delete: 1);
                             },
                           ),
                         ),

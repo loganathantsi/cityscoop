@@ -89,17 +89,19 @@ class CityScoopRepository {
     return null;
   }
 
-  Future<UpdateNotification?> updateNotificationsApi({required String id, required String type, required int read, required int delete}) async {
+  Future<UpdateNotification?> updateNotificationsApi({required String updateId, required String type, required int read, required int delete}) async {
     final loginUrl = Strings.baseURL + Strings.updateNotification;
-    int ID = int.parse(id);
+    int id = int.parse(updateId);
 
     final http.Response response = await client.post(
       getUri(loginUrl),
       headers: Utilities.getHeadersWithoutToken(),
       body: jsonEncode({
-        read == 1 ? "read": 1 : 0,
-        delete == 1 ? "delete": 1 : 0,
-        "id":[ID],
+      if(read == 1)
+        "read": 1,
+      if(delete == 1)
+        "delete": 1,
+        "id":[id],
         "type":[type]
       })
     );
