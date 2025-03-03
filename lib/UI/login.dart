@@ -180,6 +180,7 @@ class LoginScreenState extends State<LoginScreen> with SingleTickerProviderState
                           );
                           return;
                         }
+                       Utilities.setStringPreference(Strings.dashboardUsername, usernameController.text);
                        if (isRememberMe) {
                          Utilities.setStringPreference(Strings.username, usernameController.text);
                          Utilities.setStringPreference(Strings.password, passwordController.text);

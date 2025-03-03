@@ -1,20 +1,37 @@
-import 'package:CityScoop/UI/dialog_logout.dart';
-import 'package:CityScoop/UI/dialog_notifications.dart';
 import 'package:CityScoop/UI/upload_picture.dart';
 import 'package:CityScoop/UI/upload_video.dart';
 import 'package:CityScoop/app/components/utilities.dart';
 import 'package:CityScoop/constants/strings.dart';
+import 'package:CityScoop/model/post_publish_notifications_response_model.dart';
 import 'package:CityScoop/widgets/bottom_navigation.dart';
 import 'package:flutter/material.dart';
 
 class DashboardScreen extends StatefulWidget {
-  const DashboardScreen({super.key});
+  final PostPublishNotifications? postPublishNotifications;
+
+  const DashboardScreen({super.key, this.postPublishNotifications});
 
   @override
   DashboardScreenState createState() => DashboardScreenState();
 }
 
 class DashboardScreenState extends State<DashboardScreen> {
+
+  String? accessToken, userName;
+
+  @override
+  void initState() {
+    super.initState();
+    Utilities.getStringPreference(Strings.accessToken)
+        .then((value) => setState(() {
+          accessToken = value;
+          Utilities.getStringPreference(Strings.dashboardUsername)
+              .then((value) => setState(() {
+                userName = value;
+              }));
+        }));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,57 +47,20 @@ class DashboardScreenState extends State<DashboardScreen> {
                   width: Utilities.getDeviceWidth(context),
                   height: 100,
                   child: Image.asset(Strings.logoGrey, fit: BoxFit.scaleDown)),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      dialogNotifications();
-                    });
-                  },
-                  child: Column(
-                    children: [
-                      Container(
-                          padding: EdgeInsets.all(10),
-                          width: Utilities.getDeviceWidth(context) * 0.25,
-                          height: 50,
-                          child: Image.asset(Strings.notificationIcon, alignment: Alignment.center)),
-                      Container(
-                          padding: EdgeInsets.fromLTRB(10, 0, 10, 5),
-                          width: Utilities.getDeviceWidth(context) * 0.25,
-                          height: 50,
-                          child: Text("NOTICES", style: TextStyle(color: Colors.grey), textAlign: TextAlign.center)),
-                    ],
-                  ),
-                ),
-                GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      dialogLogout();
-                    });
-                  },
-                  child: Column(
-                    children: [
-                      Container(
-                          padding: EdgeInsets.all(10),
-                          width: Utilities.getDeviceWidth(context) * 0.15,
-                          height: 50,
-                          child: Image.asset(Strings.logoutIcon, alignment: Alignment.center)),
-                      Container(
-                          padding: EdgeInsets.fromLTRB(10, 0, 10, 5),
-                          width: Utilities.getDeviceWidth(context) * 0.25,
-                          height: 50,
-                          child: Text("LOG OUT", style: TextStyle(color: Colors.grey), textAlign: TextAlign.center)),
-                    ],
-                  ),
-                ),
-              ],),
+              Padding(
+                padding: const EdgeInsets.only(top: 25),
+                child: Text("UPDATE BILLING, ", style: TextStyle(color: Colors.red.shade800, fontSize: 14, fontWeight: FontWeight.bold), textAlign: TextAlign.center),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 25, bottom: 25),
+                child: Text("Welcome, $userName", style: TextStyle(color: Colors.white, fontSize: 22), textAlign: TextAlign.center),
+              ),
               Container(
                   padding: EdgeInsets.fromLTRB(10, 0, 10, 10),
                   width: Utilities.getDeviceWidth(context),
                   height: 180,
                   child: Image.asset(Strings.dashLogo, alignment: Alignment.center)),
+              SizedBox(height: 25),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -157,20 +137,6 @@ class DashboardScreenState extends State<DashboardScreen> {
         ),
       ),
       bottomNavigationBar: BottomNavigation(),
-    );
-  }
-
-  void dialogNotifications() {
-    showDialog(
-      context: context,
-      builder: (context) => DialogNotifications(),
-    );
-  }
-
-  void dialogLogout() {
-    showDialog(
-      context: context,
-      builder: (context) => DialogLogout(),
     );
   }
 }

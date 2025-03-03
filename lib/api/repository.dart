@@ -6,6 +6,7 @@ import 'package:CityScoop/model/general_response_model.dart';
 import 'package:CityScoop/model/login_response_model.dart';
 import 'package:CityScoop/model/post_publish_notifications_response_model.dart';
 import 'package:CityScoop/model/register_app_signup_response_model.dart';
+import 'package:CityScoop/model/update_notifications_response_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_interceptor/http_interceptor.dart';
 
@@ -80,6 +81,33 @@ class CityScoopRepository {
       PostPublishNotifications postPublishNotifications = PostPublishNotifications.fromJson(json.decode(response.body));
       print("---> PostPublishNotifications Response : success: ${postPublishNotifications.success}, totalCount: ${postPublishNotifications.totalCount}");
       return postPublishNotifications;
+    } else {
+      print("---> Status Code : ${response.statusCode}");
+      GeneralResponse errorResponse = GeneralResponse.fromJson(json.decode(response.body));
+      print("---> Error Message : ${errorResponse.message}");
+    }
+    return null;
+  }
+
+  Future<UpdateNotification?> updateNotificationsApi({required String id, required String type, required int read, required int delete}) async {
+    final loginUrl = Strings.baseURL + Strings.updateNotification;
+    int ID = int.parse(id);
+
+    final http.Response response = await client.post(
+      getUri(loginUrl),
+      headers: Utilities.getHeadersWithoutToken(),
+      body: jsonEncode({
+        read == 1 ? "read": 1 : 0,
+        delete == 1 ? "delete": 1 : 0,
+        "id":[ID],
+        "type":[type]
+      })
+    );
+
+    if (response.statusCode == 200) {
+      UpdateNotification updateNotification = UpdateNotification.fromJson(json.decode(response.body));
+      print("---> UpdateNotifications Response : success: ${updateNotification.success}, error: ${updateNotification.error}");
+      return updateNotification;
     } else {
       print("---> Status Code : ${response.statusCode}");
       GeneralResponse errorResponse = GeneralResponse.fromJson(json.decode(response.body));

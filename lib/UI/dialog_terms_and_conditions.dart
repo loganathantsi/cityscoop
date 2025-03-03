@@ -125,7 +125,7 @@ class DialogTerms extends StatelessWidget {
     if (postPublishNotifications != null) {
       EasyLoading.dismiss();
       if(context.mounted){
-        Navigator.push(context, MaterialPageRoute(builder: (context) => DashboardScreen()));
+        Navigator.push(context, MaterialPageRoute(builder: (context) => DashboardScreen(postPublishNotifications: postPublishNotifications)));
       }
     } else {
       EasyLoading.dismiss();

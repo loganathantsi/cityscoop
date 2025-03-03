@@ -15,6 +15,7 @@ class Strings {
   static const String dashUploadPhotoLogo = 'assets/images/cs_upload_photo.png';
   static const String dashUploadVideoLogo = 'assets/images/cs_upload_video.png';
   static const String homeIcon = 'assets/images/cs_home_icon.png';
+  static const String readIcon = 'assets/images/cs_read_icon.png';
 
   static const String termsContent = 'assets/text/terms.html';
 
@@ -27,9 +28,11 @@ class Strings {
   static const String token = "token/";
   static const String registerAppSignup = "users/register_app_signup";
   static const String postPublishNotifications = "users/post_publish_notifications";
+  static const String updateNotification = "users/update_notification";
 
   static const String accessToken = "ACCESS_TOKEN";
   static const String loginSuccess = "LOGIN_SUCCESS";
   static const String username = "USERNAME";
   static const String password = "PASSWORD";
+  static const String dashboardUsername = "DASHBOARD_USERNAME";
 }
