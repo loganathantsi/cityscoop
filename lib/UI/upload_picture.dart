@@ -1,6 +1,6 @@
 import 'package:CityScoop/app/components/utilities.dart';
 import 'package:CityScoop/constants/strings.dart';
-import 'package:CityScoop/widgets/bottom_navigation.dart';
+import 'package:CityScoop/UI/bottom_navigation.dart';
 import 'package:flutter/material.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:image_picker/image_picker.dart';
