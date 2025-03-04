@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "756068045299",
+    "project_id": "cityscoop-3da99",
+    "storage_bucket": "cityscoop-3da99.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:756068045299:android:8824491e516e69da710286",
+        "android_client_info": {
+          "package_name": "com.cityscoop.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAp0FNhxFmwK90RAxRAAOeep3ulYjKfAGA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

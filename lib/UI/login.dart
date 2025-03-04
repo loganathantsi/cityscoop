@@ -3,6 +3,7 @@ import 'package:CityScoop/api/repository.dart';
 import 'package:CityScoop/app/components/utilities.dart';
 import 'package:CityScoop/constants/strings.dart';
 import 'package:CityScoop/model/login_response_model.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -28,6 +29,9 @@ class LoginScreenState extends State<LoginScreen> with SingleTickerProviderState
     super.initState();
     _scrollToTop();
     readFile();
+    // For iOS only
+    //requestPermission();
+    getDeviceToken();
   }
 
   void _scrollToTop() {
@@ -227,6 +231,36 @@ class LoginScreenState extends State<LoginScreen> with SingleTickerProviderState
       ),
     );
   }
+
+  Future<void> getDeviceToken() async {
+    String? token = await FirebaseMessaging.instance.getToken();
+    print("---> FCM Device Token: $token");
+  }
+
+  // For iOS only
+  // Future<void> requestPermission() async {
+  //   FirebaseMessaging messaging = FirebaseMessaging.instance;
+  //   NotificationSettings settings = await messaging.requestPermission(
+  //     alert: true,
+  //     announcement: false,
+  //     badge: true,
+  //     carPlay: false,
+  //     criticalAlert: false,
+  //     provisional: false,
+  //     sound: true,
+  //   );
+  //
+  //   if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+  //     print('---> User granted permission');
+  //   } else {
+  //     print('---> User declined or has not granted permission');
+  //   }
+  // }
+
+  // FirebaseMessaging.instance.onTokenRefresh.listen((newToken) {
+  // print("New Token: $newToken");
+  // });
+
 
   Future<void> loginApi() async {
     EasyLoading.show(status: 'Loading...');

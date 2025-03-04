@@ -4,8 +4,10 @@ plugins {
     id "dev.flutter.flutter-gradle-plugin"
 }
 
+apply plugin: 'com.google.gms.google-services'
+
 android {
-    namespace = "com.example.CityScoop"
+    namespace = "com.cityscoop.app"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
     compileSdkVersion 34
@@ -22,7 +24,7 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = "com.example.CityScoop"
+        applicationId = "com.cityscoop.app"
         minSdkVersion 21
         targetSdkVersion 34
         versionCode = flutter.versionCode

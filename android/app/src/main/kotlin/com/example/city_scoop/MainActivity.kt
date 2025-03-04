@@ -1,4 +1,4 @@
-package com.example.CityScoop
+package com.cityscoop.app
 
 import io.flutter.embedding.android.FlutterActivity
 
