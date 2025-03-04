@@ -32,12 +32,7 @@ class LoginScreenState extends State<LoginScreen> with SingleTickerProviderState
     // For iOS only
     //requestPermission();
     getDeviceToken();
-  }
-
-  void _scrollToTop() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _scrollController.jumpTo(0);
-    });
+    setupFirebaseMessaging();
   }
 
   @override
@@ -232,9 +227,10 @@ class LoginScreenState extends State<LoginScreen> with SingleTickerProviderState
     );
   }
 
-  Future<void> getDeviceToken() async {
-    String? token = await FirebaseMessaging.instance.getToken();
-    print("---> FCM Device Token: $token");
+  void _scrollToTop() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _scrollController.jumpTo(0);
+    });
   }
 
   // For iOS only
@@ -261,6 +257,29 @@ class LoginScreenState extends State<LoginScreen> with SingleTickerProviderState
   // print("New Token: $newToken");
   // });
 
+  Future<void> getDeviceToken() async {
+    String? token = await FirebaseMessaging.instance.getToken();
+    print("---> FCM Device Token: $token");
+  }
+
+  void setupFirebaseMessaging() {
+    // Foreground notifications
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      print("---> Foreground Notification: ${message.notification?.title}");
+    });
+
+    // When app is in background & user taps the notification
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      print("---> User tapped the notification (Background): ${message.notification?.title}");
+    });
+
+    // When app is terminated and opened via notification
+    FirebaseMessaging.instance.getInitialMessage().then((RemoteMessage? message) {
+      if (message != null) {
+        print("---> App opened from Terminated State: ${message.notification?.title}");
+      }
+    });
+  }
 
   Future<void> loginApi() async {
     EasyLoading.show(status: 'Loading...');

@@ -1,5 +1,6 @@
 import 'package:CityScoop/count_controller.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
@@ -12,9 +13,15 @@ void main() async {
     FlutterError.dumpErrorToConsole(errorDetails);
     print("---> FlutterError.onError : ${errorDetails.exceptionAsString()}");
   };
+  FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
   Get.put(CounterController());
   runApp(CityScoop());
   configLoading();
+}
+
+
+Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  print("---> Background Notification: ${message.notification?.title}");
 }
 
 class CityScoop extends StatelessWidget {
