@@ -1,8 +1,11 @@
+import 'package:CityScoop/count_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:get/get.dart';
 import 'UI/login.dart';
 
 void main() {
+  Get.put(CounterController());
   runApp(CityScoop());
   configLoading();
 }

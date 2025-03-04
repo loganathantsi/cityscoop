@@ -1,8 +1,10 @@
 import 'package:CityScoop/api/repository.dart';
 import 'package:CityScoop/constants/strings.dart';
+import 'package:CityScoop/count_controller.dart';
 import 'package:CityScoop/model/post_publish_notifications_response_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:get/get.dart';
 
 class DialogNotifications extends StatefulWidget {
   const DialogNotifications({super.key});
@@ -72,6 +74,7 @@ class DialogNotificationsState extends State<DialogNotifications> {
                 ),
               ],
             ),
+            Divider(height: 1, color: Colors.grey.shade200),
             Expanded(
               child: (postPublishNotifications?.totalCount != null && postPublishNotifications?.totalCount == 0)
                   ? Text("No records found.", style: TextStyle(color: Colors.grey))
@@ -120,7 +123,7 @@ class DialogNotificationsState extends State<DialogNotifications> {
                         ),
                         if (postPublishNotifications?.data[index].read == "0") Positioned(
                           top: 12,
-                          right: 40,
+                          right: 50,
                           child:  GestureDetector(
                             child: Image.asset(Strings.readIcon, alignment: Alignment.center, height: 25, width: 25),
                             onTap: () {
@@ -168,6 +171,9 @@ class DialogNotificationsState extends State<DialogNotifications> {
       dialogNotificationsState?.call(() {
         EasyLoading.dismiss();
         postPublishNotifications = value;
+        final CounterController controller = Get.find<CounterController>();
+        controller.notificationBadgeAmount.value = value?.unreadCount ?? 0;
+        controller.showNotificationBadge.value = value?.unreadCount != 0;
       });
     }
     ).whenComplete((){
