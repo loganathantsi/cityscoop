@@ -1,27 +1,11 @@
 import 'package:CityScoop/UI/dashboard.dart';
 import 'package:CityScoop/UI/dialog_logout.dart';
 import 'package:CityScoop/UI/dialog_notifications.dart';
-import 'package:CityScoop/api/repository.dart';
 import 'package:CityScoop/constants/strings.dart';
-import 'package:CityScoop/model/post_publish_notifications_response_model.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 
-class BottomNavigation extends StatefulWidget {
+class BottomNavigation extends StatelessWidget {
   const BottomNavigation({super.key});
-
-  @override
-  BottomNavigationState createState() => BottomNavigationState();
-}
-
-  class BottomNavigationState extends State<BottomNavigation> {
-
-  PostPublishNotifications? postPublishNotification;
-
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,9 +19,7 @@ class BottomNavigation extends StatefulWidget {
           children: [
             GestureDetector(
               onTap: () {
-                setState(() {
-                  postPublishNotificationsApi(context);
-                });
+                dialogNotifications(context);
               },
               child: Column(
                 children: [
@@ -68,9 +50,7 @@ class BottomNavigation extends StatefulWidget {
             ),
             GestureDetector(
               onTap: () {
-                setState(() {
-                  dialogLogout(context);
-                });
+                dialogLogout(context);
               },
               child: Column(
                 children: [
@@ -83,6 +63,13 @@ class BottomNavigation extends StatefulWidget {
         ));
   }
 
+  void dialogNotifications(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => DialogNotifications(),
+    );
+  }
+
   void dialogLogout(BuildContext context) {
     showDialog(
       context: context,
@@ -90,18 +77,4 @@ class BottomNavigation extends StatefulWidget {
     );
   }
 
-  Future<void> postPublishNotificationsApi(BuildContext context) async {
-    EasyLoading.show(status: 'loading...');
-    postPublishNotification = await CityScoopRepository().postPublishNotificationsApi()
-        .whenComplete(() {
-        setState(() {
-          showDialog(
-            context: context,
-            builder: (context) => DialogNotifications(postPublishNotifications: postPublishNotification),
-          );
-        });
-        EasyLoading.dismiss();
-    }
-    );
-  }
 }

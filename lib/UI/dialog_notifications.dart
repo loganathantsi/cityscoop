@@ -2,17 +2,34 @@ import 'package:CityScoop/api/repository.dart';
 import 'package:CityScoop/constants/strings.dart';
 import 'package:CityScoop/model/post_publish_notifications_response_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 
-class DialogNotifications extends StatelessWidget {
-  final PostPublishNotifications? postPublishNotifications;
+class DialogNotifications extends StatefulWidget {
+  const DialogNotifications({super.key});
 
-  DialogNotifications({super.key, this.postPublishNotifications});
+  @override
+  DialogNotificationsState createState() => DialogNotificationsState();
+}
 
-  final ScrollController scrollController = ScrollController();
+class DialogNotificationsState extends State<DialogNotifications> {
+
+  PostPublishNotifications? postPublishNotifications;
+  StateSetter? dialogNotificationsState;
+  ScrollController scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    postPublishNotificationsApi();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Dialog(
+
+    return StatefulBuilder(builder: (BuildContext context, StateSetter setState) {
+      dialogNotificationsState = setState;
+
+     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       backgroundColor: Colors.white,
       child: SizedBox(
@@ -56,8 +73,8 @@ class DialogNotifications extends StatelessWidget {
               ],
             ),
             Expanded(
-              child: (postPublishNotifications?.totalCount ?? 0) == 0
-                  ? Center(child: Text("No notifications available", style: TextStyle(color: Colors.grey)))
+              child: (postPublishNotifications?.totalCount != null && postPublishNotifications?.totalCount == 0)
+                  ? Text("No records found.", style: TextStyle(color: Colors.grey))
                   : ListView.builder(
                 controller: scrollController,
                 itemCount: postPublishNotifications?.data.length ?? 0,
@@ -106,8 +123,13 @@ class DialogNotifications extends StatelessWidget {
                           right: 40,
                           child:  GestureDetector(
                             child: Image.asset(Strings.readIcon, alignment: Alignment.center, height: 25, width: 25),
-                            onTap: () async {
-                              await CityScoopRepository().updateNotificationsApi(updateId: postPublishNotifications?.data[index].id ?? "", type: postPublishNotifications?.data[index].type ?? "", read: 1, delete: 0);
+                            onTap: () {
+                              dialogNotificationsState?.call(() {
+                                EasyLoading.show(status: 'loading...');
+                                CityScoopRepository().updateNotificationsApi(updateId: postPublishNotifications?.data[index].id ?? "", type: postPublishNotifications?.data[index].type ?? "", read: 1, delete: 0).whenComplete((){
+                                  postPublishNotificationsApi();
+                                });
+                              });
                             },
                           ),
                         ),
@@ -116,8 +138,13 @@ class DialogNotifications extends StatelessWidget {
                           right: 0,
                           child: IconButton(
                             icon: Icon(Icons.close, color: Colors.red.shade800),
-                            onPressed: () async {
-                              await CityScoopRepository().updateNotificationsApi(updateId: postPublishNotifications?.data[index].id ?? "", type: postPublishNotifications?.data[index].type ?? "", read: 0, delete: 1);
+                            onPressed: () {
+                              dialogNotificationsState?.call(() {
+                                EasyLoading.show(status: 'loading...');
+                                CityScoopRepository().updateNotificationsApi(updateId: postPublishNotifications?.data[index].id ?? "", type: postPublishNotifications?.data[index].type ?? "", read: 0, delete: 1).whenComplete((){
+                                  postPublishNotificationsApi();
+                                });
+                              });
                             },
                           ),
                         ),
@@ -132,5 +159,19 @@ class DialogNotifications extends StatelessWidget {
         ),
       ),
     );
+    });
+  }
+
+  Future<void> postPublishNotificationsApi() async {
+    EasyLoading.show(status: 'loading...');
+    await CityScoopRepository().postPublishNotificationsApi().then((value) {
+      dialogNotificationsState?.call(() {
+        EasyLoading.dismiss();
+        postPublishNotifications = value;
+      });
+    }
+    ).whenComplete((){
+      EasyLoading.dismiss();
+    });
   }
 }

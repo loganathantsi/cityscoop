@@ -6,7 +6,7 @@ String postPublishNotificationsToJson(PostPublishNotifications data) => json.enc
 
 class PostPublishNotifications {
   bool success;
-  bool error;
+  dynamic error;
   int totalCount;
   int unreadCount;
   List<Datum> data;

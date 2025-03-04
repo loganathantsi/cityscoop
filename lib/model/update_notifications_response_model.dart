@@ -6,7 +6,7 @@ String updateNotificationsToJson(UpdateNotification data) => json.encode(data.to
 
 class UpdateNotification {
   bool success;
-  bool error;
+  dynamic error;
 
   UpdateNotification({
     required this.success,
