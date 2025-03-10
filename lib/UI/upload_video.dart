@@ -1,8 +1,10 @@
 import 'dart:io';
+import 'package:CityScoop/api/repository.dart';
 import 'package:CityScoop/app/components/utilities.dart';
 import 'package:CityScoop/constants/strings.dart';
 import 'package:CityScoop/UI/bottom_navigation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:video_player/video_player.dart';
 import 'full_screen_video_preview.dart';
@@ -93,13 +95,24 @@ class UploadVideoState extends State<UploadVideo> {
               videoFile: _video!,
               controller: _controller!,
               onSubmit: () {
-
+                EasyLoading.show(status: 'Please be patient. It may take up to 10 minutes to upload your video. Videos need to be 2-3 minutes in length so you may need to record your video again if it is too long. Thank you!' );
+                Utilities.getStringPreference(Strings.accessToken).then((value) =>
+                  CityScoopRepository().uploadVideo(_video!, value).whenComplete(() {
+                    EasyLoading.dismiss();
+                    success();
+                }));
               },
             ),
         ),
       );
 
     }
+  }
+
+  void success() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Video Uploaded Successfully')),
+    );
   }
 
 }

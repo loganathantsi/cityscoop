@@ -29,6 +29,7 @@ class Strings {
   static const String registerAppSignup = "users/register_app_signup";
   static const String postPublishNotifications = "users/post_publish_notifications";
   static const String updateNotification = "users/update_notification";
+  static const String uploadVideo = "upload/uploadvideo";
 
   static const String accessToken = "ACCESS_TOKEN";
   static const String loginSuccess = "LOGIN_SUCCESS";

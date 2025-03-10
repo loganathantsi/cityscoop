@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:CityScoop/app/components/utilities.dart';
 import 'package:CityScoop/constants/strings.dart';
 import 'package:CityScoop/middleware/networkinterceptor.dart';
@@ -7,8 +8,10 @@ import 'package:CityScoop/model/login_response_model.dart';
 import 'package:CityScoop/model/post_publish_notifications_response_model.dart';
 import 'package:CityScoop/model/register_app_signup_response_model.dart';
 import 'package:CityScoop/model/update_notifications_response_model.dart';
+import 'package:CityScoop/model/upload_video_response_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_interceptor/http_interceptor.dart';
+import 'package:path/path.dart';
 
 class CityScoopRepository {
 
@@ -62,7 +65,7 @@ class CityScoopRepository {
       print("---> RegisterAppSignUp Response : ${registerAppSignUp.success}, ${registerAppSignUp.regToken}");
       return registerAppSignUp;
     } else {
-      print("---> Status Code : ${response.statusCode}");
+      print("---us Code : ${response.statusCode}");
       GeneralResponse errorResponse = GeneralResponse.fromJson(json.decode(response.body));
       print("---> Error Message : ${errorResponse.message}");
     }
@@ -114,6 +117,35 @@ class CityScoopRepository {
       print("---> Status Code : ${response.statusCode}");
       GeneralResponse errorResponse = GeneralResponse.fromJson(json.decode(response.body));
       print("---> Error Message : ${errorResponse.message}");
+    }
+    return null;
+  }
+
+  Future<UploadVideoReponse?> uploadVideo(File videoFile, String token) async {
+    final uploadVideoUrl = Strings.baseURL + Strings.uploadVideo;
+    var request = http.MultipartRequest('POST', getUri(uploadVideoUrl));
+
+    request.headers.addAll({
+      'Authorization': 'Bearer $token',
+      'Content-Type': 'multipart/form-data',
+    });
+    request.files.add(
+      await http.MultipartFile.fromPath(
+        'video',
+        videoFile.path,
+        filename: basename(videoFile.path),
+      ),
+    );
+
+    var response = await request.send();
+    var responseString = await response.stream.bytesToString();
+    if (response.statusCode == 200) {
+      UploadVideoReponse uploadVideoReponse = UploadVideoReponse.fromJson(json.decode(responseString));
+      print("---> Upload Success");
+      print("---> UploadVideoReponse: ${uploadVideoReponse.success}, ${uploadVideoReponse.videoUrl}");
+      return uploadVideoReponse;
+    } else {
+      print("---> Upload Failed Status Code : ${response.statusCode}");
     }
     return null;
   }
