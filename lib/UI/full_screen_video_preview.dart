@@ -105,6 +105,7 @@ class FullScreenVideoPreviewState extends State<FullScreenVideoPreview> {
                       GestureDetector(
                           onTap: () {
                             fullScreenState?.call(() {
+                              widget.controller.pause();
                               widget.onSubmit();
                               Navigator.pop(context);
                             });
