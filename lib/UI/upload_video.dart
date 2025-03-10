@@ -1,7 +1,11 @@
+import 'dart:io';
 import 'package:CityScoop/app/components/utilities.dart';
 import 'package:CityScoop/constants/strings.dart';
 import 'package:CityScoop/UI/bottom_navigation.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:video_player/video_player.dart';
+import 'full_screen_video_preview.dart';
 
 class UploadVideo extends StatefulWidget {
   const UploadVideo({super.key});
@@ -11,6 +15,16 @@ class UploadVideo extends StatefulWidget {
 }
 
 class UploadVideoState extends State<UploadVideo> {
+
+  File? _video;
+  VideoPlayerController? _controller;
+  final picker = ImagePicker();
+
+  @override
+  void dispose() {
+    _controller?.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,16 +43,27 @@ class UploadVideoState extends State<UploadVideo> {
                   child: Image.asset(Strings.logoGrey, fit: BoxFit.scaleDown)),
               Divider(height: 1, color: Colors.grey.shade200),
               Expanded(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                        width: Utilities.getDeviceWidth(context) / 3,
-                        height: 125,
-                        child: Image.asset(Strings.dashUploadVideoLogo, alignment: Alignment.center, fit: BoxFit.fill)),
-                    SizedBox(height: 40, child: Text("UPLOAD VIDEO", textAlign: TextAlign.center, style: TextStyle(color: Colors.black, fontSize: 18))),
-                  ],
+                child: GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      pickVideo();
+                    });
+                  },
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                          width: Utilities.getDeviceWidth(context) / 3,
+                          height: 125,
+                          child: Image.asset(Strings.dashUploadVideoLogo, alignment: Alignment.center, fit: BoxFit.fill)
+                      ),
+                      SizedBox(
+                          height: 40,
+                          child: Text("UPLOAD VIDEO", textAlign: TextAlign.center, style: TextStyle(color: Colors.black, fontSize: 18))
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],
@@ -48,4 +73,33 @@ class UploadVideoState extends State<UploadVideo> {
       bottomNavigationBar: BottomNavigation(),
     );
   }
+
+  Future pickVideo() async {
+    final pickedFile = await picker.pickVideo(source: ImageSource.gallery);
+    if (pickedFile != null) {
+
+      setState(() {
+        _video = File(pickedFile.path);
+        _controller = VideoPlayerController.file(_video!)
+          ..initialize().then((_) {
+            setState(() {});
+            _controller!.play();
+          });
+      });
+
+      Navigator.push(context,
+        MaterialPageRoute(builder: (context) =>
+            FullScreenVideoPreview(
+              videoFile: _video!,
+              controller: _controller!,
+              onSubmit: () {
+
+              },
+            ),
+        ),
+      );
+
+    }
+  }
+
 }
