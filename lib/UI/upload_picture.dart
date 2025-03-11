@@ -1,4 +1,7 @@
+import 'dart:async';
 import 'dart:io';
+import 'dart:typed_data';
+import 'dart:ui' as ui;
 import 'package:CityScoop/api/repository.dart';
 import 'package:CityScoop/app/components/utilities.dart';
 import 'package:CityScoop/constants/strings.dart';
@@ -25,6 +28,9 @@ class UploadPictureState extends State<UploadPicture> {
   String? accessToken, userLogoUrl;
   File? _selectedImage;
   final ScrollController _scrollController = ScrollController();
+  ui.Image? finalWatermarkedImage;
+  ui.Image? watermarkImage;
+  double _opacity = 0.5;
 
   @override
   void initState() {
@@ -94,6 +100,11 @@ class UploadPictureState extends State<UploadPicture> {
                                             setState(() {
                                               if(_selectedImage != null) {
                                                 isSwitch = value;
+                                                if(value == false){
+                                                  selectedValue = "Select";
+                                                  _opacity = 0.5;
+                                                  finalWatermarkedImage = null;
+                                                }
                                               } else {
                                                 errorSwitch();
                                               }
@@ -157,9 +168,9 @@ class UploadPictureState extends State<UploadPicture> {
                                 ),
                               ),
                               SizedBox(
-                                  width: 35,
-                                  height: 35,
-                                  child: Image.network("$userLogoUrl", alignment: Alignment.center, fit: BoxFit.fill)
+                                width: 35,
+                                height: 35,
+                                child: RawImage(image: watermarkImage, fit: BoxFit.fill),
                               ),
                             ],
                           ),
@@ -182,6 +193,12 @@ class UploadPictureState extends State<UploadPicture> {
                                   fit: FlexFit.loose,
                                   constraints: BoxConstraints(),
                                 ),
+                                onChanged: (value) {
+                                  setState(() {
+                                    selectedValue = value ?? "Select";
+                                    navigateToPreview();
+                                  });
+                                },
                               )
 
                           ),
@@ -191,16 +208,33 @@ class UploadPictureState extends State<UploadPicture> {
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
                                 SizedBox(child: Text("Select Transparency")),
+                                Slider(
+                                  value: _opacity,
+                                  min: 0.0,
+                                  max: 1.0,
+                                  divisions: 4,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      _opacity = value;
+                                      navigateToPreview();
+                                    });
+                                  },
+                                ),
                               ],
                             ),
                           ),
                         ],
                       ) : SizedBox(),
-                      if(_selectedImage != null)
+                      if(_selectedImage != null && finalWatermarkedImage == null)
                         Padding(
                           padding: const EdgeInsets.all(15),
                           child: Image.file(_selectedImage!),
                         ),
+                      if(finalWatermarkedImage != null)
+                      Padding(
+                        padding: const EdgeInsets.all(15),
+                        child: RawImage(image: finalWatermarkedImage),
+                      ),
                       SizedBox(
                         width: Utilities.getDeviceWidth(context),
                         height: 75,
@@ -239,20 +273,6 @@ class UploadPictureState extends State<UploadPicture> {
   void errorSwitch() {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text('Capture new image to change brand logo')),
-    );
-  }
-
-  Future<void> userLogoApi() async {
-    EasyLoading.show(status: 'loading...');
-    await CityScoopRepository().userLogoApi().then((value) {
-      setState(() {
-        if(value != null) {
-          userLogoResponse = value;
-          userLogoUrl = userLogoResponse?.userlogoUrl;
-          EasyLoading.dismiss();
-        }
-      });
-    }
     );
   }
 
@@ -325,12 +345,116 @@ class UploadPictureState extends State<UploadPicture> {
     final XFile? image = await picker.pickImage(source: source);
 
     if (image != null) {
-      print('Selected Image Path: ${image.path}');
+      print('---> Selected Image Path: ${image.path}');
       setState(() {
         _selectedImage = File(image.path);
       });
     }
     Navigator.pop(context); // Close bottom sheet
+  }
+
+  Future<void> navigateToPreview() async {
+    if (_selectedImage == null) return;
+
+    final ui.Image originalImage = await _loadUiImage(_selectedImage!);
+    await _applyWatermark(originalImage).then((value){
+      setState(() {
+        finalWatermarkedImage = value;
+      });
+    });
+
+  }
+
+  Future<ui.Image> _loadUiImage(File file) async {
+    final Uint8List bytes = await file.readAsBytes();
+    final Completer<ui.Image> completer = Completer();
+    ui.decodeImageFromList(bytes, (ui.Image img) {
+      completer.complete(img);
+    });
+    return completer.future;
+  }
+
+  Future<ui.Image> _applyWatermark(ui.Image image) async {
+    final recorder = ui.PictureRecorder();
+    final canvas = Canvas(recorder);
+    final paint = Paint()..filterQuality = FilterQuality.high;
+    final imageSize = Size(image.width.toDouble(), image.height.toDouble());
+
+    canvas.drawImage(image, Offset.zero, paint);
+
+    if (watermarkImage != null) {
+      final paintWatermark = Paint()
+        ..color = Colors.white.withOpacity(_opacity) // Dynamic opacity
+        ..blendMode = BlendMode.srcOver;
+
+      double watermarkWidth = imageSize.width * 0.3;
+      double watermarkHeight = (watermarkImage!.height / watermarkImage!.width) * watermarkWidth;
+
+      double dx = 20;
+      double dy = 20;
+
+      switch (selectedValue) {
+        case "Bottom right":
+          setState(() {
+            dx = imageSize.width - watermarkWidth - 20;
+            dy = imageSize.height - watermarkHeight - 20;
+          });
+          break;
+        case "Bottom left":
+          setState(() {
+            dx = 20;
+            dy = imageSize.height - watermarkHeight - 20;
+          });
+          break;
+        case "Top right":
+          setState(() {
+            dx = imageSize.width - watermarkWidth - 20;
+            dy = 20;
+          });
+          break;
+        case "Top left":
+          setState(() {
+            dx = 20;
+            dy = 20;
+          });
+          break;
+        default:
+          setState(() {
+            dx = imageSize.width - watermarkWidth - 20;
+            dy = imageSize.height - watermarkHeight - 20;
+            watermarkWidth = 0;
+            watermarkHeight = 0;
+          });
+      }
+
+      final Rect watermarkRect = Rect.fromLTWH(dx, dy, watermarkWidth, watermarkHeight);
+      canvas.drawImageRect(
+          watermarkImage!,
+          Rect.fromLTWH(0, 0, watermarkImage!.width.toDouble(),
+              watermarkImage!.height.toDouble()),
+          watermarkRect,
+          paintWatermark);
+    }
+
+    final picture = recorder.endRecording();
+    return picture.toImage(image.width, image.height);
+  }
+
+  Future<void> userLogoApi() async {
+    EasyLoading.show(status: 'loading...');
+    await CityScoopRepository().userLogoApi().then((value) {
+      setState(() {
+        if(value != null) {
+          userLogoResponse = value;
+          userLogoUrl = userLogoResponse?.userlogoUrl;
+          CityScoopRepository().loadImageFromUrl(userLogoUrl!).then((value) {
+            watermarkImage = value;
+            EasyLoading.dismiss();
+          });
+        }
+      });
+    }
+    );
   }
 
 }

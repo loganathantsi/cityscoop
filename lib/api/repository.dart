@@ -1,5 +1,8 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
+import 'dart:ui' as ui;
 import 'package:CityScoop/app/components/utilities.dart';
 import 'package:CityScoop/constants/strings.dart';
 import 'package:CityScoop/middleware/networkinterceptor.dart';
@@ -169,6 +172,26 @@ class CityScoopRepository {
       print("---> Error Message : ${errorResponse.message}");
     }
     return null;
+  }
+
+  Future<ui.Image> loadImageFromUrl(String imageUrl) async {
+    try {
+      final http.Response response = await http.get(Uri.parse(imageUrl));
+      if (response.statusCode == 200) {
+        Uint8List bytes = response.bodyBytes;
+        final Completer<ui.Image> completer = Completer();
+
+        ui.decodeImageFromList(bytes, (ui.Image img) {
+          completer.complete(img);
+        });
+
+        return completer.future;
+      } else {
+        throw Exception('Failed to load image: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Error loading image: $e');
+    }
   }
 
 }
