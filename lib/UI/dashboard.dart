@@ -2,16 +2,13 @@ import 'package:CityScoop/UI/upload_picture.dart';
 import 'package:CityScoop/UI/upload_video.dart';
 import 'package:CityScoop/app/components/utilities.dart';
 import 'package:CityScoop/constants/strings.dart';
-import 'package:CityScoop/count_controller.dart';
-import 'package:CityScoop/model/post_publish_notifications_response_model.dart';
 import 'package:CityScoop/UI/bottom_navigation.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:flutter/scheduler.dart';
 
 class DashboardScreen extends StatefulWidget {
-  final PostPublishNotifications? postPublishNotifications;
 
-  const DashboardScreen({super.key, this.postPublishNotifications});
+  const DashboardScreen({super.key});
 
   @override
   DashboardScreenState createState() => DashboardScreenState();
@@ -24,17 +21,16 @@ class DashboardScreenState extends State<DashboardScreen> {
   @override
   void initState() {
     super.initState();
-    Utilities.getStringPreference(Strings.accessToken)
-        .then((value) => setState(() {
-          accessToken = value;
-          Utilities.getStringPreference(Strings.dashboardUsername)
-              .then((value) => setState(() {
-                userName = value;
-              }));
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      Utilities.getStringPreference(Strings.accessToken)
+          .then((value) => setState(() {
+        accessToken = value;
+        Utilities.getStringPreference(Strings.dashboardUsername)
+            .then((value) => setState(() {
+          userName = value;
         }));
-    final CounterController controller = Get.find<CounterController>();
-    controller.notificationBadgeAmount.value = widget.postPublishNotifications?.unreadCount ?? 0;
-    controller.showNotificationBadge.value = widget.postPublishNotifications?.unreadCount != 0;
+      }));
+    });
   }
 
   @override

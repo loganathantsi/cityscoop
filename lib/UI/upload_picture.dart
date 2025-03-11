@@ -384,7 +384,7 @@ class UploadPictureState extends State<UploadPicture> {
 
     if (watermarkImage != null) {
       final paintWatermark = Paint()
-        ..color = Colors.white.withOpacity(_opacity) // Dynamic opacity
+        ..color = Color.fromARGB((_opacity * 255).toInt(), 255, 255, 255) // Dynamic opacity
         ..blendMode = BlendMode.srcOver;
 
       double watermarkWidth = imageSize.width * 0.3;

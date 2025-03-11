@@ -29,7 +29,7 @@ class CityScoop extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       home: LoginScreen(),
       builder: EasyLoading.init(),
     );

@@ -6,6 +6,9 @@ import 'package:CityScoop/model/register_app_signup_response_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_html/flutter_html.dart';
+import 'package:get/get.dart';
+
+import '../count_controller.dart';
 
 class DialogTerms extends StatelessWidget {
   DialogTerms({super.key, required this.content});
@@ -122,10 +125,13 @@ class DialogTerms extends StatelessWidget {
 
   Future<void> postPublishNotificationsApi(BuildContext context) async {
     final PostPublishNotifications? postPublishNotifications = await CityScoopRepository().postPublishNotificationsApi();
+    final CounterController controller = Get.find<CounterController>();
     if (postPublishNotifications != null) {
       EasyLoading.dismiss();
+      controller.notificationBadgeAmount.value = postPublishNotifications.unreadCount ?? 0;
+      controller.showNotificationBadge.value = postPublishNotifications.unreadCount != 0;
       if(context.mounted){
-        Navigator.push(context, MaterialPageRoute(builder: (context) => DashboardScreen(postPublishNotifications: postPublishNotifications)));
+        Navigator.push(context, MaterialPageRoute(builder: (context) => DashboardScreen()));
       }
     } else {
       EasyLoading.dismiss();
