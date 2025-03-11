@@ -111,7 +111,7 @@ class UploadVideoState extends State<UploadVideo> {
 
   void success() {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Video Uploaded Successfully')),
+      SnackBar(content: Text('Video uploaded successfully')),
     );
   }
 

@@ -9,6 +9,7 @@ import 'package:CityScoop/model/post_publish_notifications_response_model.dart';
 import 'package:CityScoop/model/register_app_signup_response_model.dart';
 import 'package:CityScoop/model/update_notifications_response_model.dart';
 import 'package:CityScoop/model/upload_video_response_model.dart';
+import 'package:CityScoop/model/user_logo_response_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_interceptor/http_interceptor.dart';
 import 'package:path/path.dart';
@@ -146,6 +147,26 @@ class CityScoopRepository {
       return uploadVideoReponse;
     } else {
       print("---> Upload Failed Status Code : ${response.statusCode}");
+    }
+    return null;
+  }
+
+  Future<UserLogoResponse?> userLogoApi() async {
+    final userLogoUrl = Strings.baseURL + Strings.userLogo;
+
+    final http.Response response = await client.get(
+      getUri(userLogoUrl),
+      headers: Utilities.getHeadersWithoutToken(),
+    );
+
+    if (response.statusCode == 200) {
+      UserLogoResponse userLogoResponse = UserLogoResponse.fromJson(json.decode(response.body));
+      print("---> UserLogoResponse : ${userLogoResponse.status}, ${userLogoResponse.userlogoUrl}");
+      return userLogoResponse;
+    } else {
+      print("---> Status Code : ${response.statusCode}");
+      GeneralResponse errorResponse = GeneralResponse.fromJson(json.decode(response.body));
+      print("---> Error Message : ${errorResponse.message}");
     }
     return null;
   }
