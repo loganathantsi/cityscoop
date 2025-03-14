@@ -288,11 +288,9 @@ class LoginScreenState extends State<LoginScreen> with SingleTickerProviderState
     EasyLoading.show(status: 'Loading...');
     final LoginResponse? loginResponse = await CityScoopRepository().callLoginApi(usernameController.text, passwordController.text);
     if (loginResponse != null) {
-      EasyLoading.dismiss();
       Utilities.setStringPreference(Strings.accessToken, loginResponse.token);
       Utilities.setBoolPreference(Strings.loginSuccess, true);
       notificationTokenApi(loginResponse.token);
-      dialogTerms();
     } else {
       EasyLoading.dismiss();
       error();
@@ -303,6 +301,7 @@ class LoginScreenState extends State<LoginScreen> with SingleTickerProviderState
     EasyLoading.show(status: 'Loading...');
     final NotificationTokenResponse? notificationTokenResponse = await CityScoopRepository().notificationTokenApi(token, deviceToken);
     if (notificationTokenResponse != null) {
+      dialogTerms();
       EasyLoading.dismiss();
     } else {
       EasyLoading.dismiss();

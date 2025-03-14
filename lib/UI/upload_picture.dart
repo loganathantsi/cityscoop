@@ -489,9 +489,16 @@ class UploadPictureState extends State<UploadPicture> {
     EasyLoading.show(status: 'loading...');
     await CityScoopRepository().uploadBrandApi(fileExtension, base64String).then((value) {
       setState(() {
+        success();
         EasyLoading.dismiss();
       });
     }
+    );
+  }
+
+  void success() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Image uploaded successfully')),
     );
   }
 

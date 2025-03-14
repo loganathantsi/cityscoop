@@ -5,6 +5,7 @@ import 'package:CityScoop/constants/strings.dart';
 import 'package:CityScoop/UI/bottom_navigation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class DashboardScreen extends StatefulWidget {
 
@@ -66,7 +67,11 @@ class DashboardScreenState extends State<DashboardScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   GestureDetector(
-                    onTap: () {},
+                    onTap: () {
+                      setState(() {
+                        openUrlInBrowser("https://cityscoop.us/all/members/cstestdh/profile/biz-profile-settings");
+                      });
+                    },
                     child: Container(
                         padding: EdgeInsets.all(10),
                         width: Utilities.getDeviceWidth(context) / 2,
@@ -74,7 +79,11 @@ class DashboardScreenState extends State<DashboardScreen> {
                         child: Image.asset(Strings.dashProfileLogo, alignment: Alignment.center)),
                   ),
                   GestureDetector(
-                    onTap: () {},
+                    onTap: () {
+                      setState(() {
+
+                      });
+                    },
                     child: Container(
                         padding: EdgeInsets.all(10),
                         width: Utilities.getDeviceWidth(context) / 2,
@@ -140,4 +149,10 @@ class DashboardScreenState extends State<DashboardScreen> {
       bottomNavigationBar: BottomNavigation(),
     );
   }
+
+  void openUrlInBrowser(String url) {
+    final Uri uri = Uri.parse(url);
+    launchUrl(uri, mode: LaunchMode.externalApplication);
+  }
+
 }
