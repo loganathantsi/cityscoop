@@ -31,6 +31,8 @@ class Strings {
   static const String updateNotification = "users/update_notification";
   static const String uploadVideo = "upload/uploadvideo";
   static const String userLogo = "upload/userlogo";
+  static const String uploadBrand = "upload/brand";
+  static const String notificationToken = "users/notification_token";
 
   static const String accessToken = "ACCESS_TOKEN";
   static const String loginSuccess = "LOGIN_SUCCESS";

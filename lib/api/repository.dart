@@ -8,9 +8,11 @@ import 'package:CityScoop/constants/strings.dart';
 import 'package:CityScoop/middleware/networkinterceptor.dart';
 import 'package:CityScoop/model/general_response_model.dart';
 import 'package:CityScoop/model/login_response_model.dart';
+import 'package:CityScoop/model/notification_token_model.dart';
 import 'package:CityScoop/model/post_publish_notifications_response_model.dart';
 import 'package:CityScoop/model/register_app_signup_response_model.dart';
 import 'package:CityScoop/model/update_notifications_response_model.dart';
+import 'package:CityScoop/model/upload_brand_model.dart';
 import 'package:CityScoop/model/upload_video_response_model.dart';
 import 'package:CityScoop/model/user_logo_response_model.dart';
 import 'package:http/http.dart' as http;
@@ -192,6 +194,54 @@ class CityScoopRepository {
     } catch (e) {
       throw Exception('Error loading image: $e');
     }
+  }
+
+  Future<UploadBrandResponse> uploadBrandApi(String? fileExtension, String? base64String) async {
+    final uploadBrandUrl = Strings.baseURL + Strings.uploadBrand;
+
+    final http.Response response = await client.post(
+        getUri(uploadBrandUrl),
+        headers: Utilities.getHeadersWithoutToken(),
+        body: jsonEncode({
+          "ext": fileExtension ?? "",
+          "image": "data:image/$fileExtension;base64,$base64String",
+        })
+    );
+
+    if (response.statusCode == 200) {
+      UploadBrandResponse uploadBrandResponse = UploadBrandResponse.fromJson(json.decode(response.body));
+      print("---> Upload Success");
+      print("---> UploadBrandResponse: ${uploadBrandResponse.status}, ${uploadBrandResponse.avatarUrl}");
+      return uploadBrandResponse;
+    } else {
+      print("---> Upload Failed Status Code : ${response.statusCode}");
+      throw Exception('Failed to upload image');
+    }
+  }
+
+  Future<NotificationTokenResponse?> notificationTokenApi(String? token, String? deviceToken) async {
+    final uploadVideoUrl = Strings.baseURL + Strings.notificationToken;
+
+    var request = http.MultipartRequest('POST', getUri(uploadVideoUrl));
+
+    request.headers.addAll({
+      'Authorization': 'Bearer $token',
+      'Content-Type': 'multipart/form-data',
+    });
+
+    request.fields["notification_token"] = deviceToken ?? "";
+
+    var response = await request.send();
+    var responseString = await response.stream.bytesToString();
+
+    if (response.statusCode == 200) {
+      NotificationTokenResponse notificationTokenResponse = NotificationTokenResponse.fromJson(json.decode(responseString));
+      print("---> notificationTokenResponse: ${notificationTokenResponse.success}, ${notificationTokenResponse.notificationToken}");
+      return notificationTokenResponse;
+    } else {
+      print("---> notificationTokenResponse Status Code : ${response.statusCode}");
+    }
+    return null;
   }
 
 }

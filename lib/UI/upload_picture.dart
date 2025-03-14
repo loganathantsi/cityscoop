@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
@@ -11,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path/path.dart' as path;
 
 class UploadPicture extends StatefulWidget {
   const UploadPicture({super.key});
@@ -31,6 +33,8 @@ class UploadPictureState extends State<UploadPicture> {
   ui.Image? finalWatermarkedImage;
   ui.Image? watermarkImage;
   double _opacity = 0.5;
+  String? fileExtensionSelectedImage, base64StringSelectedImage;
+  String? fileExtensionFinalImage, base64StringFinalImage;
 
   @override
   void initState() {
@@ -249,7 +253,13 @@ class UploadPictureState extends State<UploadPicture> {
                                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
                               ),
                             ),
-                            onPressed: () {},
+                            onPressed: () {
+                              if (_selectedImage != null && finalWatermarkedImage == null) {
+                                uploadBrandApi(fileExtensionSelectedImage, base64StringSelectedImage);
+                              } else if (finalWatermarkedImage != null && isSwitch == true) {
+                                uploadBrandApi(fileExtensionFinalImage, base64StringFinalImage);
+                              }
+                            },
                             child: Text('SUBMIT',
                               style: TextStyle(fontSize: 18, color: Colors.white),
                             ),
@@ -346,8 +356,14 @@ class UploadPictureState extends State<UploadPicture> {
 
     if (image != null) {
       print('---> Selected Image Path: ${image.path}');
-      setState(() {
         _selectedImage = File(image.path);
+      List<int> imageBytes = await File(image.path).readAsBytes();
+      setState(() {
+        base64StringSelectedImage = base64Encode(imageBytes);
+        fileExtensionSelectedImage = path.extension(File(image.path).path).replaceFirst(".", "");
+
+        print("---> base64StringSelectedImage: $base64StringSelectedImage");
+        print("---> fileExtensionSelectedImage: $fileExtensionSelectedImage");
       });
     }
     Navigator.pop(context); // Close bottom sheet
@@ -357,12 +373,24 @@ class UploadPictureState extends State<UploadPicture> {
     if (_selectedImage == null) return;
 
     final ui.Image originalImage = await _loadUiImage(_selectedImage!);
-    await _applyWatermark(originalImage).then((value){
-      setState(() {
-        finalWatermarkedImage = value;
+    await _applyWatermark(originalImage).then((value) {
+      setState(() async {
+      finalWatermarkedImage = value;
+      base64StringFinalImage = await convertUiImageToBase64(value);
+      fileExtensionFinalImage = "png";
+      print("---> base64StringFinalImage: $base64StringFinalImage");
+      print("---> fileExtensionFinalImage: $fileExtensionFinalImage");
       });
     });
 
+  }
+
+  Future<String> convertUiImageToBase64(ui.Image image) async {
+    ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+    if (byteData == null) return "";
+    Uint8List imageBytes = byteData.buffer.asUint8List();
+    String base64String = base64Encode(imageBytes);
+    return base64String;
   }
 
   Future<ui.Image> _loadUiImage(File file) async {
@@ -452,6 +480,16 @@ class UploadPictureState extends State<UploadPicture> {
             EasyLoading.dismiss();
           });
         }
+      });
+    }
+    );
+  }
+
+  Future<void> uploadBrandApi(String? fileExtension, String? base64String) async {
+    EasyLoading.show(status: 'loading...');
+    await CityScoopRepository().uploadBrandApi(fileExtension, base64String).then((value) {
+      setState(() {
+        EasyLoading.dismiss();
       });
     }
     );

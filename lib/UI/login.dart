@@ -3,6 +3,7 @@ import 'package:CityScoop/api/repository.dart';
 import 'package:CityScoop/app/components/utilities.dart';
 import 'package:CityScoop/constants/strings.dart';
 import 'package:CityScoop/model/login_response_model.dart';
+import 'package:CityScoop/model/notification_token_model.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -23,6 +24,7 @@ class LoginScreenState extends State<LoginScreen> with SingleTickerProviderState
   TextEditingController passwordController = TextEditingController();
   String termsContent = "";
   bool isRememberMe = false;
+  String? deviceToken;
 
   @override
   void initState() {
@@ -258,8 +260,9 @@ class LoginScreenState extends State<LoginScreen> with SingleTickerProviderState
   // });
 
   Future<void> getDeviceToken() async {
-    String? token = await FirebaseMessaging.instance.getToken();
-    print("---> FCM Device Token: $token");
+    deviceToken = await FirebaseMessaging.instance.getToken();
+    setState(() {});
+    print("---> FCM Device Token: $deviceToken");
   }
 
   void setupFirebaseMessaging() {
@@ -288,10 +291,21 @@ class LoginScreenState extends State<LoginScreen> with SingleTickerProviderState
       EasyLoading.dismiss();
       Utilities.setStringPreference(Strings.accessToken, loginResponse.token);
       Utilities.setBoolPreference(Strings.loginSuccess, true);
+      notificationTokenApi(loginResponse.token);
       dialogTerms();
     } else {
       EasyLoading.dismiss();
       error();
+    }
+  }
+
+  Future<void> notificationTokenApi(String? token) async {
+    EasyLoading.show(status: 'Loading...');
+    final NotificationTokenResponse? notificationTokenResponse = await CityScoopRepository().notificationTokenApi(token, deviceToken);
+    if (notificationTokenResponse != null) {
+      EasyLoading.dismiss();
+    } else {
+      EasyLoading.dismiss();
     }
   }
 
