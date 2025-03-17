@@ -49,19 +49,33 @@ class DashboardScreenState extends State<DashboardScreen> {
                   width: Utilities.getDeviceWidth(context),
                   height: 100,
                   child: Image.asset(Strings.logoGrey, fit: BoxFit.scaleDown)),
-              Padding(
-                padding: const EdgeInsets.only(top: 25),
-                child: Text("UPDATE BILLING, ", style: TextStyle(color: Colors.red.shade800, fontSize: 14, fontWeight: FontWeight.bold), textAlign: TextAlign.center),
+              GestureDetector(
+                onTap: () {
+                  setState(() {
+                    openUrlInBrowser("https://cityscoop.us/update-billing/");
+                  });
+                },
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 25),
+                  child: Text("UPDATE BILLING, ", style: TextStyle(color: Colors.red.shade800, fontSize: 14, fontWeight: FontWeight.bold), textAlign: TextAlign.center),
+                ),
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 25, bottom: 25),
                 child: Text("Welcome, $userName", style: TextStyle(color: Colors.white, fontSize: 22), textAlign: TextAlign.center),
               ),
-              Container(
-                  padding: EdgeInsets.fromLTRB(10, 0, 10, 10),
-                  width: Utilities.getDeviceWidth(context),
-                  height: 180,
-                  child: Image.asset(Strings.dashLogo, alignment: Alignment.center)),
+              GestureDetector(
+                onTap: (){
+                  setState(() {
+                    openUrlInBrowser("https://cityscoop.us/oaklandca-electrical/wp-admin/admin.php?page=cs-dashboard&applogin=1&date=2024-04");
+                  });
+                },
+                child: Container(
+                    padding: EdgeInsets.fromLTRB(10, 0, 10, 10),
+                    width: Utilities.getDeviceWidth(context),
+                    height: 180,
+                    child: Image.asset(Strings.dashLogo, alignment: Alignment.center)),
+              ),
               SizedBox(height: 25),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -81,7 +95,7 @@ class DashboardScreenState extends State<DashboardScreen> {
                   GestureDetector(
                     onTap: () {
                       setState(() {
-
+                        openUrlInBrowser("https://app.asana.com/0/1206112293952328/1206112293952328");
                       });
                     },
                     child: Container(

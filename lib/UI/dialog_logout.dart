@@ -1,3 +1,4 @@
+import 'package:CityScoop/UI/login.dart';
 import 'package:flutter/material.dart';
 
 class DialogLogout extends StatelessWidget {
@@ -50,7 +51,13 @@ class DialogLogout extends StatelessWidget {
                       ),
                       onPressed: () {
                         dialogLogoutState?.call((){
-
+                          Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => LoginScreen(),
+                                settings: RouteSettings(name: "LoginScreen")),
+                                (Route<dynamic> route) => false,
+                          );
                         });
                       },
                       child: Text('Yes',
