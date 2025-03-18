@@ -36,6 +36,10 @@ class LoginScreenState extends State<LoginScreen> with SingleTickerProviderState
     //requestPermission();
     getDeviceToken();
     setupFirebaseMessaging();
+    Utilities.getStringPreference(Strings.username)
+        .then((value) => setState(() {
+      usernameController.text = value;
+    }));
   }
 
   @override
@@ -185,10 +189,8 @@ class LoginScreenState extends State<LoginScreen> with SingleTickerProviderState
                        Utilities.setStringPreference(Strings.dashboardUsername, usernameController.text);
                        if (isRememberMe) {
                          Utilities.setStringPreference(Strings.username, usernameController.text);
-                         Utilities.setStringPreference(Strings.password, passwordController.text);
                        } else {
                          Utilities.setStringPreference(Strings.username, "");
-                         Utilities.setStringPreference(Strings.password, "");
                        }
                        loginApi();
                       },
