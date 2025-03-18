@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:html/parser.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -207,7 +208,11 @@ class LoginScreenState extends State<LoginScreen> with SingleTickerProviderState
                             color: Colors.grey[400], height: 4, thickness: 2),
                       ),
                       TextButton(
-                        onPressed: () {},
+                        onPressed: () {
+                            setState(() {
+                              openUrlInBrowser("https://cityscoop.us/wp-login.php?action=lostpassword");
+                            });
+                        },
                         child: Text(
                           '  Lost your password?  ',
                           style: TextStyle(color: Colors.grey),
@@ -312,6 +317,11 @@ class LoginScreenState extends State<LoginScreen> with SingleTickerProviderState
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text('Invalid username and password')),
     );
+  }
+
+  void openUrlInBrowser(String url) {
+    final Uri uri = Uri.parse(url);
+    launchUrl(uri, mode: LaunchMode.externalApplication);
   }
 
   void readFile() async {
