@@ -39,6 +39,9 @@ class LoginScreenState extends State<LoginScreen> with SingleTickerProviderState
     Utilities.getStringPreference(Strings.username)
         .then((value) => setState(() {
       usernameController.text = value;
+      if(usernameController.text.isNotEmpty) {
+        isRememberMe = true;
+      }
     }));
   }
 
