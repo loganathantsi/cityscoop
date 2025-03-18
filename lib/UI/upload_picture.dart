@@ -7,12 +7,17 @@ import 'package:CityScoop/api/repository.dart';
 import 'package:CityScoop/app/components/utilities.dart';
 import 'package:CityScoop/constants/strings.dart';
 import 'package:CityScoop/UI/bottom_navigation.dart';
+import 'package:CityScoop/count_controller.dart';
+import 'package:CityScoop/main.dart';
 import 'package:CityScoop/model/user_logo_response_model.dart';
 import 'package:flutter/material.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' as path;
+import '../model/post_publish_notifications_response_model.dart';
+import 'dashboard.dart';
 
 class UploadPicture extends StatefulWidget {
   const UploadPicture({super.key});
@@ -476,8 +481,14 @@ class UploadPictureState extends State<UploadPicture> {
           userLogoResponse = value;
           userLogoUrl = userLogoResponse?.userlogoUrl;
           CityScoopRepository().loadImageFromUrl(userLogoUrl!).then((value) {
-            watermarkImage = value;
-            EasyLoading.dismiss();
+            setState(() {
+              watermarkImage = value;
+            });
+          }).whenComplete((){
+            setState(() {
+              EasyLoading.dismiss();
+              showImagePickerBottomSheet(context);
+            });
           });
         }
       });
@@ -489,11 +500,31 @@ class UploadPictureState extends State<UploadPicture> {
     EasyLoading.show(status: 'loading...');
     await CityScoopRepository().uploadBrandApi(fileExtension, base64String).then((value) {
       setState(() {
-        success();
-        EasyLoading.dismiss();
+        postPublishNotificationsApi(context);
       });
     }
     );
+  }
+
+  Future<void> postPublishNotificationsApi(BuildContext context) async {
+    final PostPublishNotifications? postPublishNotifications = await CityScoopRepository().postPublishNotificationsApi();
+    final CounterController controller = Get.find<CounterController>();
+    if (postPublishNotifications != null) {
+      setState(() {
+        EasyLoading.dismiss();
+        success();
+        controller.notificationBadgeAmount.value = postPublishNotifications.unreadCount ?? 0;
+        controller.showNotificationBadge.value = postPublishNotifications.unreadCount != 0;
+        navigatorKey.currentState?.pushAndRemoveUntil(
+          MaterialPageRoute(
+              builder: (context) => DashboardScreen(),
+              settings: RouteSettings(name: "DashboardScreen")),
+              (Route<dynamic> route) => false,
+        );
+      });
+    } else {
+      EasyLoading.dismiss();
+    }
   }
 
   void success() {

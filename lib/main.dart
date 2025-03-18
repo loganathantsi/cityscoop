@@ -24,12 +24,15 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   print("---> Background Notification: ${message.notification?.title}");
 }
 
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
 class CityScoop extends StatelessWidget {
   const CityScoop({super.key});
 
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
+      navigatorKey: navigatorKey,
       home: LoginScreen(),
       builder: EasyLoading.init(),
     );
