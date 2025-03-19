@@ -147,8 +147,7 @@ class CityScoopRepository {
     var responseString = await response.stream.bytesToString();
     if (response.statusCode == 200) {
       UploadVideoReponse uploadVideoReponse = UploadVideoReponse.fromJson(json.decode(responseString));
-      print("---> Upload Success");
-      print("---> UploadVideoReponse: ${uploadVideoReponse.success}, ${uploadVideoReponse.videoUrl}");
+      print("---> Upload Success --- UploadVideoReponse: ${uploadVideoReponse.success}, ${uploadVideoReponse.videoUrl}");
       return uploadVideoReponse;
     } else {
       print("---> Upload Failed Status Code : ${response.statusCode}");
@@ -196,7 +195,7 @@ class CityScoopRepository {
     }
   }
 
-  Future<UploadBrandResponse> uploadBrandApi(String? fileExtension, String? base64String) async {
+  Future<UploadBrandResponse?> uploadBrandApi(String? fileExtension, String? base64String) async {
     final uploadBrandUrl = Strings.baseURL + Strings.uploadBrand;
 
     final http.Response response = await client.post(
@@ -210,13 +209,12 @@ class CityScoopRepository {
 
     if (response.statusCode == 200) {
       UploadBrandResponse uploadBrandResponse = UploadBrandResponse.fromJson(json.decode(response.body));
-      print("---> Upload Success");
-      print("---> UploadBrandResponse: ${uploadBrandResponse.status}, ${uploadBrandResponse.avatarUrl}");
+      print("---> Upload Success --- UploadBrandResponse: ${uploadBrandResponse.status}, ${uploadBrandResponse.avatarUrl}");
       return uploadBrandResponse;
     } else {
       print("---> Upload Failed Status Code : ${response.statusCode}");
-      throw Exception('Failed to upload image');
     }
+    return null;
   }
 
   Future<NotificationTokenResponse?> notificationTokenApi(String? token, String? deviceToken) async {
