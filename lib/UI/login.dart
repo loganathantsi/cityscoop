@@ -18,8 +18,8 @@ class LoginScreen extends StatefulWidget {
   State<LoginScreen> createState() => LoginScreenState();
 }
 
-class LoginScreenState extends State<LoginScreen> with SingleTickerProviderStateMixin {
-
+class LoginScreenState extends State<LoginScreen>
+    with SingleTickerProviderStateMixin {
   final ScrollController _scrollController = ScrollController();
   TextEditingController usernameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
@@ -33,16 +33,17 @@ class LoginScreenState extends State<LoginScreen> with SingleTickerProviderState
     _scrollToTop();
     readFile();
     // For iOS only
-    //requestPermission();
+    requestPermission();
     getDeviceToken();
     setupFirebaseMessaging();
-    Utilities.getStringPreference(Strings.username)
-        .then((value) => setState(() {
-      usernameController.text = value;
-      if(usernameController.text.isNotEmpty) {
-        isRememberMe = true;
-      }
-    }));
+    Utilities.getStringPreference(Strings.username).then(
+      (value) => setState(() {
+        usernameController.text = value;
+        if (usernameController.text.isNotEmpty) {
+          isRememberMe = true;
+        }
+      }),
+    );
   }
 
   @override
@@ -63,8 +64,9 @@ class LoginScreenState extends State<LoginScreen> with SingleTickerProviderState
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   SizedBox(
-                      width: Utilities.getDeviceWidth(context),
-                      child: Image.asset(Strings.logoGrey, fit: BoxFit.fill)),
+                    width: Utilities.getDeviceWidth(context),
+                    child: Image.asset(Strings.logoGrey, fit: BoxFit.fill),
+                  ),
                   SizedBox(height: 40),
                   Text(
                     'SIGN IN',
@@ -84,21 +86,27 @@ class LoginScreenState extends State<LoginScreen> with SingleTickerProviderState
                       fillColor: Colors.white,
                       prefixIcon: Padding(
                         padding: EdgeInsets.all(10),
-                        child: Image.asset(Strings.userIcon,
-                            width: 24, height: 24),
+                        child: Image.asset(
+                          Strings.userIcon,
+                          width: 24,
+                          height: 24,
+                        ),
                       ),
                       hintText: 'Username or Email',
                       hintStyle: TextStyle(color: Colors.grey),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(5),
                         borderSide: BorderSide(
-                            color: Colors.white, width: 0), // White border
+                          color: Colors.white,
+                          width: 0,
+                        ), // White border
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(5),
                         borderSide: BorderSide(
-                            color: Colors.white,
-                            width: 0), // White border when focused
+                          color: Colors.white,
+                          width: 0,
+                        ), // White border when focused
                       ),
                     ),
                   ),
@@ -112,21 +120,27 @@ class LoginScreenState extends State<LoginScreen> with SingleTickerProviderState
                       fillColor: Colors.white,
                       prefixIcon: Padding(
                         padding: EdgeInsets.all(10),
-                        child: Image.asset(Strings.passwordIcon,
-                            width: 24, height: 24),
+                        child: Image.asset(
+                          Strings.passwordIcon,
+                          width: 24,
+                          height: 24,
+                        ),
                       ),
                       hintText: 'Password',
                       hintStyle: TextStyle(color: Colors.grey),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(5),
                         borderSide: BorderSide(
-                            color: Colors.white, width: 2), // White border
+                          color: Colors.white,
+                          width: 2,
+                        ), // White border
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(5),
                         borderSide: BorderSide(
-                            color: Colors.white,
-                            width: 2), // White border when focused
+                          color: Colors.white,
+                          width: 2,
+                        ), // White border when focused
                       ),
                     ),
                   ),
@@ -135,32 +149,35 @@ class LoginScreenState extends State<LoginScreen> with SingleTickerProviderState
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Transform.scale(
-                          scale: 1,
-                          child: Checkbox(
-                            value: isRememberMe,
-                            onChanged: (value) {
-                              setState(() {
-                                isRememberMe = value ?? false;
-                              });
-                            },
-                            checkColor: Colors.black,
-                            activeColor: Colors.grey[400],
-                            fillColor:
-                                WidgetStateProperty.all(Colors.grey[400]),
-                            // Background fill color
-                            shape: RoundedRectangleBorder(
-                              // Shapes the checkbox
-                              borderRadius: BorderRadius.circular(
-                                  4), // Adjust for roundness
-                            ),
-                            side: BorderSide(
-                                color: Colors.grey
-                                    .shade700), // Adds border to the checkbox itself
-                          )),
+                        scale: 1,
+                        child: Checkbox(
+                          value: isRememberMe,
+                          onChanged: (value) {
+                            setState(() {
+                              isRememberMe = value ?? false;
+                            });
+                          },
+                          checkColor: Colors.black,
+                          activeColor: Colors.grey[400],
+                          fillColor: WidgetStateProperty.all(Colors.grey[400]),
+                          // Background fill color
+                          shape: RoundedRectangleBorder(
+                            // Shapes the checkbox
+                            borderRadius: BorderRadius.circular(
+                              4,
+                            ), // Adjust for roundness
+                          ),
+                          side: BorderSide(
+                            color: Colors.grey.shade700,
+                          ), // Adds border to the checkbox itself
+                        ),
+                      ),
                       Padding(
                         padding: const EdgeInsets.only(right: 10),
-                        child: Text('Remember Me',
-                            style: TextStyle(color: Colors.grey)),
+                        child: Text(
+                          'Remember Me',
+                          style: TextStyle(color: Colors.grey),
+                        ),
                       ),
                     ],
                   ),
@@ -174,11 +191,12 @@ class LoginScreenState extends State<LoginScreen> with SingleTickerProviderState
                       ).copyWith(
                         shape: WidgetStateProperty.all(
                           RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(5)),
+                            borderRadius: BorderRadius.circular(5),
+                          ),
                         ),
                       ),
                       onPressed: () async {
-                       if (usernameController.text.isEmpty) {
+                        if (usernameController.text.isEmpty) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(content: Text('Username is required')),
                           );
@@ -189,13 +207,19 @@ class LoginScreenState extends State<LoginScreen> with SingleTickerProviderState
                           );
                           return;
                         }
-                       Utilities.setStringPreference(Strings.dashboardUsername, usernameController.text);
-                       if (isRememberMe) {
-                         Utilities.setStringPreference(Strings.username, usernameController.text);
-                       } else {
-                         Utilities.setStringPreference(Strings.username, "");
-                       }
-                       loginApi();
+                        Utilities.setStringPreference(
+                          Strings.dashboardUsername,
+                          usernameController.text,
+                        );
+                        if (isRememberMe) {
+                          Utilities.setStringPreference(
+                            Strings.username,
+                            usernameController.text,
+                          );
+                        } else {
+                          Utilities.setStringPreference(Strings.username, "");
+                        }
+                        loginApi();
                       },
                       child: const Text(
                         'LOGIN',
@@ -210,13 +234,18 @@ class LoginScreenState extends State<LoginScreen> with SingleTickerProviderState
                       SizedBox(
                         width: Utilities.getDeviceWidth(context) * 0.10,
                         child: Divider(
-                            color: Colors.grey[400], height: 4, thickness: 2),
+                          color: Colors.grey[400],
+                          height: 4,
+                          thickness: 2,
+                        ),
                       ),
                       TextButton(
                         onPressed: () {
-                            setState(() {
-                              openUrlInBrowser("https://cityscoop.us/wp-login.php?action=lostpassword");
-                            });
+                          setState(() {
+                            openUrlInBrowser(
+                              "https://cityscoop.us/wp-login.php?action=lostpassword",
+                            );
+                          });
                         },
                         child: Text(
                           '  Lost your password?  ',
@@ -226,7 +255,10 @@ class LoginScreenState extends State<LoginScreen> with SingleTickerProviderState
                       SizedBox(
                         width: Utilities.getDeviceWidth(context) * 0.10,
                         child: Divider(
-                            color: Colors.grey[400], height: 4, thickness: 2),
+                          color: Colors.grey[400],
+                          height: 4,
+                          thickness: 2,
+                        ),
                       ),
                     ],
                   ),
@@ -246,28 +278,28 @@ class LoginScreenState extends State<LoginScreen> with SingleTickerProviderState
   }
 
   // For iOS only
-  // Future<void> requestPermission() async {
-  //   FirebaseMessaging messaging = FirebaseMessaging.instance;
-  //   NotificationSettings settings = await messaging.requestPermission(
-  //     alert: true,
-  //     announcement: false,
-  //     badge: true,
-  //     carPlay: false,
-  //     criticalAlert: false,
-  //     provisional: false,
-  //     sound: true,
-  //   );
-  //
-  //   if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-  //     print('---> User granted permission');
-  //   } else {
-  //     print('---> User declined or has not granted permission');
-  //   }
-  // }
+  Future<void> requestPermission() async {
+    FirebaseMessaging messaging = FirebaseMessaging.instance;
+    NotificationSettings settings = await messaging.requestPermission(
+      alert: true,
+      announcement: false,
+      badge: true,
+      carPlay: false,
+      criticalAlert: false,
+      provisional: false,
+      sound: true,
+    );
 
-  // FirebaseMessaging.instance.onTokenRefresh.listen((newToken) {
-  // print("New Token: $newToken");
-  // });
+    if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+      print('---> User granted permission');
+    } else {
+      print('---> User declined or has not granted permission');
+    }
+  }
+
+  //FirebaseMessaging.instance.onTokenRefresh.listen((newToken) {
+  //print("New Token: $newToken");
+  //});
 
   Future<void> getDeviceToken() async {
     deviceToken = await FirebaseMessaging.instance.getToken();
@@ -283,20 +315,27 @@ class LoginScreenState extends State<LoginScreen> with SingleTickerProviderState
 
     // When app is in background & user taps the notification
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      print("---> User tapped the notification (Background): ${message.notification?.title}");
+      print(
+        "---> User tapped the notification (Background): ${message.notification?.title}",
+      );
     });
 
     // When app is terminated and opened via notification
-    FirebaseMessaging.instance.getInitialMessage().then((RemoteMessage? message) {
+    FirebaseMessaging.instance.getInitialMessage().then((
+      RemoteMessage? message,
+    ) {
       if (message != null) {
-        print("---> App opened from Terminated State: ${message.notification?.title}");
+        print(
+          "---> App opened from Terminated State: ${message.notification?.title}",
+        );
       }
     });
   }
 
   Future<void> loginApi() async {
     EasyLoading.show(status: 'Loading...');
-    final LoginResponse? loginResponse = await CityScoopRepository().callLoginApi(usernameController.text, passwordController.text);
+    final LoginResponse? loginResponse = await CityScoopRepository()
+        .callLoginApi(usernameController.text, passwordController.text);
     if (loginResponse != null) {
       Utilities.setStringPreference(Strings.accessToken, loginResponse.token);
       Utilities.setBoolPreference(Strings.loginSuccess, true);
@@ -309,7 +348,8 @@ class LoginScreenState extends State<LoginScreen> with SingleTickerProviderState
 
   Future<void> notificationTokenApi(String? token) async {
     EasyLoading.show(status: 'Loading...');
-    final NotificationTokenResponse? notificationTokenResponse = await CityScoopRepository().notificationTokenApi(token, deviceToken);
+    final NotificationTokenResponse? notificationTokenResponse =
+        await CityScoopRepository().notificationTokenApi(token, deviceToken);
     if (notificationTokenResponse != null) {
       dialogTerms();
       EasyLoading.dismiss();
@@ -319,9 +359,9 @@ class LoginScreenState extends State<LoginScreen> with SingleTickerProviderState
   }
 
   void error() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Invalid username and password')),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text('Invalid username and password')));
   }
 
   void openUrlInBrowser(String url) {
