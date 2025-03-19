@@ -338,6 +338,7 @@ class LoginScreenState extends State<LoginScreen> with SingleTickerProviderState
   void dialogTerms() {
     showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (context) => DialogTerms(content: termsContent),
     );
   }
