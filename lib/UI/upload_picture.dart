@@ -350,6 +350,23 @@ class UploadPictureState extends State<UploadPicture> {
                         ],
                       )),
                 ),
+                Divider(color: Colors.grey.shade200),
+                GestureDetector(
+                  onTap: () => Navigator.pop(context),
+                  child: SizedBox(
+                      height: 40,
+                      child: Center(
+                        child: Padding(
+                          padding: const EdgeInsets.only(bottom: 10),
+                          child: Text("Cancel",
+                            style: TextStyle(
+                                fontSize: 18,
+                                color: Colors.red.shade800),
+                          ),
+                        ),
+                      )
+                  ),
+                ),
               ],
             ),
           ],
