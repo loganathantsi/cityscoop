@@ -378,6 +378,7 @@ class LoginScreenState extends State<LoginScreen>
   void dialogTerms() {
     showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (context) => DialogTerms(content: termsContent),
     );
   }

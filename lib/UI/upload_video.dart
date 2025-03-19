@@ -6,13 +6,14 @@ import 'package:CityScoop/UI/bottom_navigation.dart';
 import 'package:CityScoop/count_controller.dart';
 import 'package:CityScoop/main.dart';
 import 'package:CityScoop/model/post_publish_notifications_response_model.dart';
+import 'package:CityScoop/model/upload_video_response_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:video_player/video_player.dart';
 import 'dashboard.dart';
-import 'full_screen_video_preview.dart';
+// import 'package:video_player/video_player.dart';
+// import 'full_screen_video_preview.dart';
 
 class UploadVideo extends StatefulWidget {
   const UploadVideo({super.key});
@@ -23,14 +24,20 @@ class UploadVideo extends StatefulWidget {
 
 class UploadVideoState extends State<UploadVideo> {
 
-  File? _video;
-  VideoPlayerController? _controller;
+  // File? _video;
+  // VideoPlayerController? _controller;
   final picker = ImagePicker();
 
+  // @override
+  // void dispose() {
+  //   _controller?.dispose();
+  //   super.dispose();
+  // }
+
   @override
-  void dispose() {
-    _controller?.dispose();
-    super.dispose();
+  void initState() {
+    super.initState();
+    pickVideo();
   }
 
   @override
@@ -86,31 +93,53 @@ class UploadVideoState extends State<UploadVideo> {
     if (pickedFile != null) {
 
       setState(() {
-        _video = File(pickedFile.path);
-        _controller = VideoPlayerController.file(_video!)
-          ..initialize().then((_) {
-            setState(() {});
-            _controller!.play();
-          });
+        EasyLoading.show(status: 'Please be patient. It may take up to 10 minutes to upload your video. Videos need to be 2-3 minutes in length so you may need to record your video again if it is too long. Thank you!' );
+        Utilities.getStringPreference(Strings.accessToken).then((value) async {
+          UploadVideoReponse? uploadVideoReponse = await CityScoopRepository().uploadVideo(File(pickedFile.path), value);
+          if(uploadVideoReponse != null) {
+            setState(() {
+              postPublishNotificationsApi(context);
+            });
+          } else {
+            EasyLoading.dismiss();
+            error();
+          }
+        }
+        );
       });
 
-      Navigator.push(context,
-        MaterialPageRoute(builder: (context) =>
-            FullScreenVideoPreview(
-              videoFile: _video!,
-              controller: _controller!,
-              onSubmit: () {
-                EasyLoading.show(status: 'Please be patient. It may take up to 10 minutes to upload your video. Videos need to be 2-3 minutes in length so you may need to record your video again if it is too long. Thank you!' );
-                Utilities.getStringPreference(Strings.accessToken).then((value) =>
-                  CityScoopRepository().uploadVideo(_video!, value).whenComplete(() {
-                    setState(() {
-                      postPublishNotificationsApi(context);
-                    });
-                }));
-              },
-            ),
-        ),
-      );
+      // setState(() {
+      //   _video = File(pickedFile.path);
+      //   _controller = VideoPlayerController.file(_video!)
+      //     ..initialize().then((_) {
+      //       setState(() {});
+      //       _controller!.play();
+      //     });
+      // });
+
+      // Navigator.push(context,
+      //   MaterialPageRoute(builder: (context) =>
+      //       FullScreenVideoPreview(
+      //         videoFile: _video!,
+      //         controller: _controller!,
+      //         onSubmit: () {
+      //           EasyLoading.show(status: 'Please be patient. It may take up to 10 minutes to upload your video. Videos need to be 2-3 minutes in length so you may need to record your video again if it is too long. Thank you!' );
+      //           Utilities.getStringPreference(Strings.accessToken).then((value) async {
+      //             UploadVideoReponse? uploadVideoReponse = await CityScoopRepository().uploadVideo(_video!, value);
+      //             if(uploadVideoReponse != null) {
+      //               setState(() {
+      //                 postPublishNotificationsApi(context);
+      //               });
+      //             } else {
+      //               EasyLoading.dismiss();
+      //               error();
+      //             }
+      //           }
+      //           );
+      //         },
+      //       ),
+      //   ),
+      // );
 
     }
   }
@@ -139,6 +168,12 @@ class UploadVideoState extends State<UploadVideo> {
   void success() {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text('Video uploaded successfully')),
+    );
+  }
+
+  void error() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Video upload failed')),
     );
   }
 

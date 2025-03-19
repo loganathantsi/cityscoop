@@ -9,6 +9,7 @@ import 'package:CityScoop/constants/strings.dart';
 import 'package:CityScoop/UI/bottom_navigation.dart';
 import 'package:CityScoop/count_controller.dart';
 import 'package:CityScoop/main.dart';
+import 'package:CityScoop/model/upload_brand_model.dart';
 import 'package:CityScoop/model/user_logo_response_model.dart';
 import 'package:flutter/material.dart';
 import 'package:dropdown_search/dropdown_search.dart';
@@ -302,12 +303,12 @@ class UploadPictureState extends State<UploadPicture> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 SizedBox(
-                    height: 40,
+                    height: 50,
                     child: Center(
                       child: Text("UPLOAD PICTURE",
                         style: TextStyle(
-                            fontSize: 18,
-                            color: Colors.grey),
+                            fontSize: 20,
+                            color: Colors.black),
                       ),
                     )
                 ),
@@ -315,9 +316,10 @@ class UploadPictureState extends State<UploadPicture> {
                 GestureDetector(
                   onTap: () => pickImage(context, ImageSource.camera),
                   child: SizedBox(
-                      height: 40,
+                      height: 45,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Icon(Icons.camera_alt, color: Colors.grey),
                           Text(" Camera",
@@ -333,9 +335,10 @@ class UploadPictureState extends State<UploadPicture> {
                 GestureDetector(
                   onTap: () => pickImage(context, ImageSource.gallery),
                   child: SizedBox(
-                      height: 40,
+                      height: 45,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Icon(Icons.photo_library, color: Colors.grey),
                           Text(" Gallery",
@@ -346,6 +349,23 @@ class UploadPictureState extends State<UploadPicture> {
                           ),
                         ],
                       )),
+                ),
+                Divider(color: Colors.grey.shade200),
+                GestureDetector(
+                  onTap: () => Navigator.pop(context),
+                  child: SizedBox(
+                      height: 40,
+                      child: Center(
+                        child: Padding(
+                          padding: const EdgeInsets.only(bottom: 10),
+                          child: Text("Cancel",
+                            style: TextStyle(
+                                fontSize: 18,
+                                color: Colors.red.shade800),
+                          ),
+                        ),
+                      )
+                  ),
                 ),
               ],
             ),
@@ -498,12 +518,15 @@ class UploadPictureState extends State<UploadPicture> {
 
   Future<void> uploadBrandApi(String? fileExtension, String? base64String) async {
     EasyLoading.show(status: 'loading...');
-    await CityScoopRepository().uploadBrandApi(fileExtension, base64String).then((value) {
+    UploadBrandResponse? uploadBrandResponse = await CityScoopRepository().uploadBrandApi(fileExtension, base64String);
+    if(uploadBrandResponse != null) {
       setState(() {
         postPublishNotificationsApi(context);
       });
+    } else {
+      EasyLoading.dismiss();
+      error();
     }
-    );
   }
 
   Future<void> postPublishNotificationsApi(BuildContext context) async {
@@ -530,6 +553,12 @@ class UploadPictureState extends State<UploadPicture> {
   void success() {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text('Image uploaded successfully')),
+    );
+  }
+
+  void error() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Image upload failed')),
     );
   }
 
