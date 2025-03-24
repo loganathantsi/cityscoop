@@ -7,6 +7,7 @@ import 'package:CityScoop/count_controller.dart';
 import 'package:CityScoop/main.dart';
 import 'package:CityScoop/model/post_publish_notifications_response_model.dart';
 import 'package:CityScoop/model/upload_video_response_model.dart';
+import 'package:animated_snack_bar/animated_snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
@@ -166,15 +167,25 @@ class UploadVideoState extends State<UploadVideo> {
   }
 
   void success() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Video uploaded successfully')),
-    );
+    AnimatedSnackBar.rectangle(
+      'CityScoop',
+      'Video uploaded successfully',
+      type: AnimatedSnackBarType.success,
+      brightness: Brightness.light,
+      duration: Duration(seconds: 4),
+      mobileSnackBarPosition: MobileSnackBarPosition.bottom,
+    ).show(context);
   }
 
   void error() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Video upload failed')),
-    );
+    AnimatedSnackBar.rectangle(
+      'CityScoop',
+      'Video upload failed',
+      type: AnimatedSnackBarType.warning,
+      brightness: Brightness.light,
+      duration: Duration(seconds: 4),
+      mobileSnackBarPosition: MobileSnackBarPosition.bottom,
+    ).show(context);
   }
 
 }

@@ -11,6 +11,7 @@ import 'package:CityScoop/count_controller.dart';
 import 'package:CityScoop/main.dart';
 import 'package:CityScoop/model/upload_brand_model.dart';
 import 'package:CityScoop/model/user_logo_response_model.dart';
+import 'package:animated_snack_bar/animated_snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -287,9 +288,14 @@ class UploadPictureState extends State<UploadPicture> {
   }
 
   void errorSwitch() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Capture new image to change brand logo')),
-    );
+    AnimatedSnackBar.rectangle(
+      'CityScoop',
+      'Capture new image to change brand logo',
+      type: AnimatedSnackBarType.warning,
+      brightness: Brightness.light,
+      duration: Duration(seconds: 4),
+      mobileSnackBarPosition: MobileSnackBarPosition.bottom,
+    ).show(context);
   }
 
   void showImagePickerBottomSheet(BuildContext context) {
@@ -551,15 +557,26 @@ class UploadPictureState extends State<UploadPicture> {
   }
 
   void success() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Image uploaded successfully')),
-    );
+    AnimatedSnackBar.rectangle(
+      'CityScoop',
+      'Image uploaded successfully',
+      type: AnimatedSnackBarType.success,
+      brightness: Brightness.light,
+      duration: Duration(seconds: 4),
+      mobileSnackBarPosition: MobileSnackBarPosition.bottom,
+
+    ).show(context);
   }
 
   void error() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Image upload failed')),
-    );
+    AnimatedSnackBar.rectangle(
+      'CityScoop',
+      'Image upload failed',
+      type: AnimatedSnackBarType.warning,
+      brightness: Brightness.light,
+      duration: Duration(seconds: 4),
+      mobileSnackBarPosition: MobileSnackBarPosition.bottom,
+    ).show(context);
   }
 
 }
