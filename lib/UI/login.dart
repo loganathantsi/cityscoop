@@ -308,16 +308,25 @@ class LoginScreenState extends State<LoginScreen>
   }
 
   void setupFirebaseMessaging() {
+
     // Foreground notifications
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+
       print("---> Foreground Notification: ${message.notification?.title}");
+      print("---> Foreground Data: ${message.data['redirect_url']}");
+
     });
 
     // When app is in background & user taps the notification
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      print(
-        "---> User tapped the notification (Background): ${message.notification?.title}",
-      );
+
+      print("---> Notification (Background): message.notification?.title ${message.notification?.title}");
+      print("---> Notification (Background): message.data['redirect_url'] ${message.data['redirect_url']}");
+
+      setState(() {
+        openUrlInBrowser("${message.data['redirect_url']}");
+      });
+
     });
 
     // When app is terminated and opened via notification
@@ -325,11 +334,17 @@ class LoginScreenState extends State<LoginScreen>
       RemoteMessage? message,
     ) {
       if (message != null) {
-        print(
-          "---> App opened from Terminated State: ${message.notification?.title}",
-        );
+
+        print("---> Notification (Terminated): message.notification?.title ${message.notification?.title}");
+        print("---> Notification (Terminated): message.data['redirect_url'] ${message.data['redirect_url']}");
+
+        setState(() {
+          openUrlInBrowser("${message.data['redirect_url']}");
+        });
+
       }
     });
+
   }
 
   Future<void> loginApi() async {

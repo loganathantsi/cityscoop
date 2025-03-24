@@ -61,7 +61,7 @@ class DashboardScreenState extends State<DashboardScreen> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(top: 25, bottom: 25),
+                padding: const EdgeInsets.only(top: 20, bottom: 20),
                 child: Text("Welcome, $userName", style: TextStyle(color: Colors.white, fontSize: 22), textAlign: TextAlign.center),
               ),
               GestureDetector(
@@ -71,12 +71,12 @@ class DashboardScreenState extends State<DashboardScreen> {
                   });
                 },
                 child: Container(
-                    padding: EdgeInsets.fromLTRB(10, 0, 10, 10),
+                    padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
                     width: Utilities.getDeviceWidth(context),
-                    height: 180,
+                    height: Utilities.getDeviceHeight(context) * 0.20,
                     child: Image.asset(Strings.dashLogo, alignment: Alignment.center)),
               ),
-              SizedBox(height: 25),
+              SizedBox(height: 10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -89,7 +89,7 @@ class DashboardScreenState extends State<DashboardScreen> {
                     child: Container(
                         padding: EdgeInsets.all(10),
                         width: Utilities.getDeviceWidth(context) / 2,
-                        height: 125,
+                        height: Utilities.getDeviceHeight(context) * 0.15,
                         child: Image.asset(Strings.dashProfileLogo, alignment: Alignment.center)),
                   ),
                   GestureDetector(
@@ -101,13 +101,12 @@ class DashboardScreenState extends State<DashboardScreen> {
                     child: Container(
                         padding: EdgeInsets.all(10),
                         width: Utilities.getDeviceWidth(context) / 2,
-                        height: 125,
+                        height: Utilities.getDeviceHeight(context) * 0.15,
                         child: Image.asset(Strings.dashCalenderLogo, alignment: Alignment.center)),
                   ),
                 ],),
-              Expanded(child: SizedBox()),
               Padding(
-                padding: const EdgeInsets.all(15),
+                padding: EdgeInsets.all(15),
                 child: Container(
                   decoration: BoxDecoration(
                     color: Colors.white, // Background color
@@ -119,7 +118,7 @@ class DashboardScreenState extends State<DashboardScreen> {
                     children: [
                       Text("UPLOAD", style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold)),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
                           GestureDetector(
                             onTap: () {
@@ -130,7 +129,7 @@ class DashboardScreenState extends State<DashboardScreen> {
                               children: [
                                 SizedBox(
                                     width: Utilities.getDeviceWidth(context) / 6,
-                                    height: 60,
+                                    height: Utilities.getDeviceHeight(context) * 0.10,
                                     child: Image.asset(Strings.dashUploadVideoLogo)),
                                 SizedBox(width: 90, height: 40, child: Text("UPLOAD VIDEO", textAlign: TextAlign.center, style: TextStyle(color: Colors.black, fontSize: 15, fontWeight: FontWeight.bold))),
                               ],
@@ -145,7 +144,7 @@ class DashboardScreenState extends State<DashboardScreen> {
                               children: [
                                 SizedBox(
                                     width: Utilities.getDeviceWidth(context) / 6,
-                                    height: 60,
+                                    height: Utilities.getDeviceHeight(context) * 0.10,
                                     child: Image.asset(Strings.dashUploadPhotoLogo, alignment: Alignment.center)),
                                 SizedBox(width: 90, height: 40, child: Text("UPLOAD PHOTO", textAlign: TextAlign.center, style: TextStyle(color: Colors.black, fontSize: 15, fontWeight: FontWeight.bold))),
                               ],
