@@ -61,7 +61,7 @@ class DashboardScreenState extends State<DashboardScreen> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(top: 25, bottom: 25),
+                padding: const EdgeInsets.only(top: 20, bottom: 20),
                 child: Text("Welcome, $userName", style: TextStyle(color: Colors.white, fontSize: 22), textAlign: TextAlign.center),
               ),
               GestureDetector(
@@ -73,10 +73,10 @@ class DashboardScreenState extends State<DashboardScreen> {
                 child: Container(
                     padding: EdgeInsets.fromLTRB(10, 0, 10, 10),
                     width: Utilities.getDeviceWidth(context),
-                    height: 180,
+                    height: 160,
                     child: Image.asset(Strings.dashLogo, alignment: Alignment.center)),
               ),
-              SizedBox(height: 25),
+              SizedBox(height: 10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -105,7 +105,6 @@ class DashboardScreenState extends State<DashboardScreen> {
                         child: Image.asset(Strings.dashCalenderLogo, alignment: Alignment.center)),
                   ),
                 ],),
-              Expanded(child: SizedBox()),
               Padding(
                 padding: const EdgeInsets.all(15),
                 child: Container(
@@ -113,13 +112,13 @@ class DashboardScreenState extends State<DashboardScreen> {
                     color: Colors.white, // Background color
                     borderRadius: BorderRadius.circular(10), // Rounded corners
                   ),
-                  padding: EdgeInsets.fromLTRB(5, 10, 5, 10),
+                  padding: EdgeInsets.fromLTRB(5, 10, 5, 15),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text("UPLOAD", style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold)),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
                           GestureDetector(
                             onTap: () {
