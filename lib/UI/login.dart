@@ -10,6 +10,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:html/parser.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:animated_snack_bar/animated_snack_bar.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -196,15 +197,25 @@ class LoginScreenState extends State<LoginScreen>
                         ),
                       ),
                       onPressed: () async {
-                        if (usernameController.text.isEmpty) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('Username is required')),
-                          );
+                       if (usernameController.text.isEmpty) {
+                         AnimatedSnackBar.rectangle(
+                           'CityScoop',
+                           'Username is required',
+                           type: AnimatedSnackBarType.warning,
+                           brightness: Brightness.light,
+                           duration: Duration(seconds: 4),
+                           mobileSnackBarPosition: MobileSnackBarPosition.bottom,
+                         ).show(context);
                           return;
                         } else if (passwordController.text.isEmpty) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('Password is required')),
-                          );
+                          AnimatedSnackBar.rectangle(
+                            'CityScoop',
+                            'Password is required',
+                            type: AnimatedSnackBarType.warning,
+                            brightness: Brightness.light,
+                            duration: Duration(seconds: 4),
+                            mobileSnackBarPosition: MobileSnackBarPosition.bottom,
+                          ).show(context);
                           return;
                         }
                         Utilities.setStringPreference(
@@ -374,9 +385,14 @@ class LoginScreenState extends State<LoginScreen>
   }
 
   void error() {
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text('Invalid username and password')));
+    AnimatedSnackBar.rectangle(
+      'CityScoop',
+      'Invalid username and password',
+      type: AnimatedSnackBarType.warning,
+      brightness: Brightness.light,
+      duration: Duration(seconds: 4),
+      mobileSnackBarPosition: MobileSnackBarPosition.bottom,
+    ).show(context);
   }
 
   void openUrlInBrowser(String url) {
