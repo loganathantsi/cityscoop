@@ -387,9 +387,9 @@ class UploadPictureState extends State<UploadPicture> {
 
     if (image != null) {
       print('---> Selected Image Path: ${image.path}');
-        _selectedImage = File(image.path);
       List<int> imageBytes = await File(image.path).readAsBytes();
       setState(() {
+        _selectedImage = File(image.path);
         base64StringSelectedImage = base64Encode(imageBytes);
         fileExtensionSelectedImage = path.extension(File(image.path).path).replaceFirst(".", "");
 
@@ -401,19 +401,19 @@ class UploadPictureState extends State<UploadPicture> {
   }
 
   Future<void> navigateToPreview() async {
+    EasyLoading.show(status: 'Loading...');
     if (_selectedImage == null) return;
-
-    final ui.Image originalImage = await _loadUiImage(_selectedImage!);
-    await _applyWatermark(originalImage).then((value) {
-      setState(() async {
-      finalWatermarkedImage = value;
-      base64StringFinalImage = await convertUiImageToBase64(value);
-      fileExtensionFinalImage = "png";
-      print("---> base64StringFinalImage: $base64StringFinalImage");
-      print("---> fileExtensionFinalImage: $fileExtensionFinalImage");
+    final originalImage = await _loadUiImage(_selectedImage!);
+    finalWatermarkedImage = await _applyWatermark(originalImage);
+    final newBase64String = await convertUiImageToBase64(finalWatermarkedImage!);
+      setState(() {
+        finalWatermarkedImage = finalWatermarkedImage;
+        base64StringFinalImage = newBase64String;
+        fileExtensionFinalImage = "png";
+        EasyLoading.dismiss();
+        print("---> base64StringFinalImage: $base64StringFinalImage");
+        print("---> fileExtensionFinalImage: $fileExtensionFinalImage");
       });
-    });
-
   }
 
   Future<String> convertUiImageToBase64(ui.Image image) async {
