@@ -57,12 +57,12 @@ class DashboardScreenState extends State<DashboardScreen> {
                 },
                 child: Padding(
                   padding: const EdgeInsets.only(top: 25),
-                  child: Text("UPDATE BILLING, ", style: TextStyle(color: Colors.red.shade800, fontSize: 14, fontWeight: FontWeight.bold), textAlign: TextAlign.center),
+                  child: Text("UPDATE BILLING ", style: TextStyle(color: Colors.red.shade800, fontSize: 14, fontWeight: FontWeight.bold), textAlign: TextAlign.center),
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 20, bottom: 20),
-                child: Text("Welcome, $userName", style: TextStyle(color: Colors.white, fontSize: 22), textAlign: TextAlign.center),
+                child: Text("Welcome, $userName.", style: TextStyle(color: Colors.white, fontSize: 22), textAlign: TextAlign.center),
               ),
               GestureDetector(
                 onTap: (){
@@ -128,10 +128,10 @@ class DashboardScreenState extends State<DashboardScreen> {
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 SizedBox(
-                                    width: Utilities.getDeviceWidth(context) / 6,
-                                    height: Utilities.getDeviceHeight(context) * 0.10,
+                                    width: Utilities.getDeviceWidth(context) / 8,
+                                    height: Utilities.getDeviceHeight(context) * 0.09,
                                     child: Image.asset(Strings.dashUploadVideoLogo)),
-                                SizedBox(width: 90, height: 40, child: Text("UPLOAD VIDEO", textAlign: TextAlign.center, style: TextStyle(color: Colors.black, fontSize: 15, fontWeight: FontWeight.bold))),
+                                SizedBox(width: 90, height: 30, child: Text("VIDEO", textAlign: TextAlign.center, style: TextStyle(color: Colors.black, fontSize: 18, fontWeight: FontWeight.bold))),
                               ],
                             ),
                           ),
@@ -143,10 +143,10 @@ class DashboardScreenState extends State<DashboardScreen> {
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 SizedBox(
-                                    width: Utilities.getDeviceWidth(context) / 6,
-                                    height: Utilities.getDeviceHeight(context) * 0.10,
+                                    width: Utilities.getDeviceWidth(context) / 8,
+                                    height: Utilities.getDeviceHeight(context) * 0.09,
                                     child: Image.asset(Strings.dashUploadPhotoLogo, alignment: Alignment.center)),
-                                SizedBox(width: 90, height: 40, child: Text("UPLOAD PHOTO", textAlign: TextAlign.center, style: TextStyle(color: Colors.black, fontSize: 15, fontWeight: FontWeight.bold))),
+                                SizedBox(width: 90, height: 30, child: Text("PHOTO", textAlign: TextAlign.center, style: TextStyle(color: Colors.black, fontSize: 18, fontWeight: FontWeight.bold))),
                               ],
                             ),
                           ),

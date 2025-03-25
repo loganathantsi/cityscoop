@@ -41,7 +41,7 @@ class UploadPictureState extends State<UploadPicture> {
   ui.Image? watermarkImage;
   double _opacity = 0.5;
   String? fileExtensionSelectedImage, base64StringSelectedImage;
-  String? fileExtensionFinalImage, base64StringFinalImage;
+  String? base64StringFinalImage;
 
   @override
   void initState() {
@@ -264,7 +264,10 @@ class UploadPictureState extends State<UploadPicture> {
                               if (_selectedImage != null && finalWatermarkedImage == null) {
                                 uploadBrandApi(fileExtensionSelectedImage, base64StringSelectedImage);
                               } else if (finalWatermarkedImage != null && isSwitch == true) {
-                                uploadBrandApi(fileExtensionFinalImage, base64StringFinalImage);
+                                  EasyLoading.show(status: 'loading...');
+                                  base64FinalConvert().whenComplete((){
+                                    uploadBrandApi("png", base64StringFinalImage);
+                                  });
                               }
                             },
                             child: Text('SUBMIT',
@@ -387,9 +390,9 @@ class UploadPictureState extends State<UploadPicture> {
 
     if (image != null) {
       print('---> Selected Image Path: ${image.path}');
-        _selectedImage = File(image.path);
       List<int> imageBytes = await File(image.path).readAsBytes();
       setState(() {
+        _selectedImage = File(image.path);
         base64StringSelectedImage = base64Encode(imageBytes);
         fileExtensionSelectedImage = path.extension(File(image.path).path).replaceFirst(".", "");
 
@@ -401,19 +404,24 @@ class UploadPictureState extends State<UploadPicture> {
   }
 
   Future<void> navigateToPreview() async {
-    if (_selectedImage == null) return;
-
-    final ui.Image originalImage = await _loadUiImage(_selectedImage!);
-    await _applyWatermark(originalImage).then((value) {
-      setState(() async {
-      finalWatermarkedImage = value;
-      base64StringFinalImage = await convertUiImageToBase64(value);
-      fileExtensionFinalImage = "png";
-      print("---> base64StringFinalImage: $base64StringFinalImage");
-      print("---> fileExtensionFinalImage: $fileExtensionFinalImage");
+    EasyLoading.show(status: 'Loading...');
+    if (_selectedImage == null){
+      EasyLoading.dismiss();
+      return;
+    }
+    final orginalImage = await _loadUiImage(_selectedImage!);
+    finalWatermarkedImage = await _applyWatermark(orginalImage);
+      setState(() {
+        finalWatermarkedImage = finalWatermarkedImage;
+        EasyLoading.dismiss();
       });
-    });
+  }
 
+  Future<void> base64FinalConvert() async {
+    base64StringFinalImage = await convertUiImageToBase64(finalWatermarkedImage!);
+    setState(() {
+      base64StringFinalImage = base64StringFinalImage;
+    });
   }
 
   Future<String> convertUiImageToBase64(ui.Image image) async {

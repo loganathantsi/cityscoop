@@ -2,9 +2,11 @@ import 'package:CityScoop/api/repository.dart';
 import 'package:CityScoop/constants/strings.dart';
 import 'package:CityScoop/count_controller.dart';
 import 'package:CityScoop/model/post_publish_notifications_response_model.dart';
+import 'package:animated_snack_bar/animated_snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 class DialogNotifications extends StatefulWidget {
   const DialogNotifications({super.key});
@@ -22,7 +24,7 @@ class DialogNotificationsState extends State<DialogNotifications> {
   @override
   void initState() {
     super.initState();
-    postPublishNotificationsApi();
+    postPublishNotificationsApi(false);
   }
 
   @override
@@ -85,6 +87,11 @@ class DialogNotificationsState extends State<DialogNotifications> {
                   return Card(
                     color: Colors.white,
                     margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                    shape: RoundedRectangleBorder(
+                      side: BorderSide(color: Colors.grey, width: 1.0), // Grey border
+                      borderRadius: BorderRadius.circular(10.0), // Optional: Rounded corners
+                    ),
+                    elevation: 0,
                     child: Stack(
                       children: [
                         Padding(
@@ -92,6 +99,7 @@ class DialogNotificationsState extends State<DialogNotifications> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+                              SizedBox(height: 10),
                               if (postPublishNotifications?.data[index].title != null && postPublishNotifications?.data[index].title != "")
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -115,7 +123,7 @@ class DialogNotificationsState extends State<DialogNotifications> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text("Date & Time:", style: TextStyle(fontWeight: FontWeight.bold)),
-                                  Text("${postPublishNotifications?.data[index].dateCreated}", style: const TextStyle(fontSize: 12, color: Colors.grey)),
+                                  Text(_formatDate("${postPublishNotifications?.data[index].dateCreated}"), style: const TextStyle(fontSize: 12, color: Colors.grey)),
                                 ],
                               ),
                             ],
@@ -130,7 +138,7 @@ class DialogNotificationsState extends State<DialogNotifications> {
                               dialogNotificationsState?.call(() {
                                 EasyLoading.show(status: 'loading...');
                                 CityScoopRepository().updateNotificationsApi(updateId: postPublishNotifications?.data[index].id ?? "", type: postPublishNotifications?.data[index].type ?? "", read: 1, delete: 0).whenComplete((){
-                                  postPublishNotificationsApi();
+                                  postPublishNotificationsApi(true);
                                 });
                               });
                             },
@@ -145,7 +153,7 @@ class DialogNotificationsState extends State<DialogNotifications> {
                               dialogNotificationsState?.call(() {
                                 EasyLoading.show(status: 'loading...');
                                 CityScoopRepository().updateNotificationsApi(updateId: postPublishNotifications?.data[index].id ?? "", type: postPublishNotifications?.data[index].type ?? "", read: 0, delete: 1).whenComplete((){
-                                  postPublishNotificationsApi();
+                                  postPublishNotificationsApi(true);
                                 });
                               });
                             },
@@ -165,7 +173,7 @@ class DialogNotificationsState extends State<DialogNotifications> {
     });
   }
 
-  Future<void> postPublishNotificationsApi() async {
+  Future<void> postPublishNotificationsApi(bool toast) async {
     EasyLoading.show(status: 'loading...');
     await CityScoopRepository().postPublishNotificationsApi().then((value) {
       dialogNotificationsState?.call(() {
@@ -174,10 +182,33 @@ class DialogNotificationsState extends State<DialogNotifications> {
         final CounterController controller = Get.find<CounterController>();
         controller.notificationBadgeAmount.value = value?.unreadCount ?? 0;
         controller.showNotificationBadge.value = value?.unreadCount != 0;
+        if(toast) {
+          success();
+        }
       });
     }
     ).whenComplete((){
       EasyLoading.dismiss();
     });
+  }
+
+  String _formatDate(String dateString) {
+    try {
+      DateTime dateTime = DateTime.parse(dateString);
+      return DateFormat("MMMM dd yyyy hh:mm a").format(dateTime);
+    } catch (e) {
+      return dateString;
+    }
+  }
+
+  void success() {
+    AnimatedSnackBar.rectangle(
+      'CityScoop',
+      'Status updated successfully.',
+      type: AnimatedSnackBarType.success,
+      brightness: Brightness.light,
+      duration: Duration(seconds: 4),
+      mobileSnackBarPosition: MobileSnackBarPosition.bottom,
+    ).show(context);
   }
 }
