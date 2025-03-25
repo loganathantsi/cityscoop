@@ -41,7 +41,7 @@ class UploadPictureState extends State<UploadPicture> {
   ui.Image? watermarkImage;
   double _opacity = 0.5;
   String? fileExtensionSelectedImage, base64StringSelectedImage;
-  String? fileExtensionFinalImage, base64StringFinalImage;
+  String? base64StringFinalImage;
 
   @override
   void initState() {
@@ -264,7 +264,10 @@ class UploadPictureState extends State<UploadPicture> {
                               if (_selectedImage != null && finalWatermarkedImage == null) {
                                 uploadBrandApi(fileExtensionSelectedImage, base64StringSelectedImage);
                               } else if (finalWatermarkedImage != null && isSwitch == true) {
-                                uploadBrandApi(fileExtensionFinalImage, base64StringFinalImage);
+                                  EasyLoading.show(status: 'loading...');
+                                  base64FinalConvert().whenComplete((){
+                                    uploadBrandApi("png", base64StringFinalImage);
+                                  });
                               }
                             },
                             child: Text('SUBMIT',
@@ -402,18 +405,23 @@ class UploadPictureState extends State<UploadPicture> {
 
   Future<void> navigateToPreview() async {
     EasyLoading.show(status: 'Loading...');
-    if (_selectedImage == null) return;
-    final originalImage = await _loadUiImage(_selectedImage!);
-    finalWatermarkedImage = await _applyWatermark(originalImage);
-    final newBase64String = await convertUiImageToBase64(finalWatermarkedImage!);
+    if (_selectedImage == null){
+      EasyLoading.dismiss();
+      return;
+    }
+    final orginalImage = await _loadUiImage(_selectedImage!);
+    finalWatermarkedImage = await _applyWatermark(orginalImage);
       setState(() {
         finalWatermarkedImage = finalWatermarkedImage;
-        base64StringFinalImage = newBase64String;
-        fileExtensionFinalImage = "png";
         EasyLoading.dismiss();
-        print("---> base64StringFinalImage: $base64StringFinalImage");
-        print("---> fileExtensionFinalImage: $fileExtensionFinalImage");
       });
+  }
+
+  Future<void> base64FinalConvert() async {
+    base64StringFinalImage = await convertUiImageToBase64(finalWatermarkedImage!);
+    setState(() {
+      base64StringFinalImage = base64StringFinalImage;
+    });
   }
 
   Future<String> convertUiImageToBase64(ui.Image image) async {
