@@ -220,10 +220,13 @@ class UploadPictureState extends State<UploadPicture> {
                               children: [
                                 SizedBox(child: Text("Select Transparency")),
                                 Slider(
+                                  thumbColor: Colors.white,
+                                  activeColor: Colors.grey.shade300,
+                                  inactiveColor: Colors.grey.shade300,
                                   value: _opacity,
                                   min: 0.0,
                                   max: 1.0,
-                                  divisions: 4,
+                                  divisions: 10,
                                   onChanged: (value) {
                                     setState(() {
                                       _opacity = value;
