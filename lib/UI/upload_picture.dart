@@ -219,20 +219,26 @@ class UploadPictureState extends State<UploadPicture> {
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
                                 SizedBox(child: Text("Select Transparency")),
-                                Slider(
-                                  thumbColor: Colors.white,
-                                  activeColor: Colors.grey.shade300,
-                                  inactiveColor: Colors.grey.shade300,
-                                  value: _opacity,
-                                  min: 0.0,
-                                  max: 1.0,
-                                  divisions: 10,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      _opacity = value;
-                                      navigateToPreview();
-                                    });
-                                  },
+                                SliderTheme(
+                                  data: SliderTheme.of(context).copyWith(
+                                    trackHeight: 2,
+                                    thumbShape: RoundSliderThumbShape(enabledThumbRadius: 16.0),
+                                  ),
+                                  child: Slider(
+                                    thumbColor: Colors.white,
+                                    activeColor: Colors.grey.shade300,
+                                    inactiveColor: Colors.grey.shade300,
+                                    value: _opacity,
+                                    min: 0.0,
+                                    max: 1.0,
+                                    divisions: 10,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        _opacity = value;
+                                        navigateToPreview();
+                                      });
+                                    },
+                                  ),
                                 ),
                               ],
                             ),
