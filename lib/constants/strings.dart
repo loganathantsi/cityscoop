@@ -6,7 +6,7 @@ class Strings {
   static const String userIcon = 'assets/images/cs_user_icon.png';
   static const String passwordIcon = 'assets/images/cs_password_icon.png';
   static const String dialogheaderImage = 'assets/images/cs_dialog_header.png';
-  static const String closeIcon = 'assets/images/cs_close_icon.png';
+  static const String closeIcon = 'assets/images/close_icon.png';
   static const String dashLogo = 'assets/images/cs_dashboard_logo.png';
   static const String logoutIcon = 'assets/images/cs_logout_icon.png';
   static const String notificationIcon = 'assets/images/cs_notification_icon.png';
