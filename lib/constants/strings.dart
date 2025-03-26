@@ -6,12 +6,12 @@ class Strings {
   static const String userIcon = 'assets/images/cs_user_icon.png';
   static const String passwordIcon = 'assets/images/cs_password_icon.png';
   static const String dialogheaderImage = 'assets/images/cs_dialog_header.png';
-  static const String closeIcon = 'assets/images/cs_close_icon.png';
-  static const String dashLogo = 'assets/images/cs_dashboard_logo.png';
+  static const String closeIcon = 'assets/images/close_icon.png';
+  static const String dashLogo = 'assets/images/cs_dashboard.png';
   static const String logoutIcon = 'assets/images/cs_logout_icon.png';
   static const String notificationIcon = 'assets/images/cs_notification_icon.png';
-  static const String dashCalenderLogo = 'assets/images/cs_dash_calender.png';
-  static const String dashProfileLogo = 'assets/images/cs_dash_profile.png';
+  static const String calenderLogo = 'assets/images/cs_calender.png';
+  static const String profileLogo = 'assets/images/cs_profile.png';
   static const String dashUploadPhotoLogo = 'assets/images/cs_upload_photo.png';
   static const String dashUploadVideoLogo = 'assets/images/cs_upload_video.png';
   static const String homeIcon = 'assets/images/cs_home_icon.png';
@@ -39,4 +39,7 @@ class Strings {
   static const String username = "USERNAME";
   static const String password = "PASSWORD";
   static const String dashboardUsername = "DASHBOARD_USERNAME";
+  static const String dashboardURL = "DASHBOARD_URL";
+  static const String profileURL = "PROFILE_URL";
+  static const String calendarURL = "CALENDAR_URL";
 }

@@ -30,20 +30,29 @@ class BottomNavigation extends StatelessWidget {
               child: Column(
                 children: [
                   badges.Badge(
-                    position: badges.BadgePosition.topEnd(top: -8, end: -12),
+                    position: badges.BadgePosition.topEnd(top: -7, end: -21),
                     badgeAnimation: badges.BadgeAnimation.slide(),
                     showBadge: controller.showNotificationBadge.value,
                     badgeStyle: badges.BadgeStyle(
-                      badgeColor: color,
+                      shape: badges.BadgeShape.square,
+                      borderRadius: BorderRadius.circular(8),
+                      badgeColor: color, // Customize badge color
+                      padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                     ),
-                    badgeContent: Text(
-                      controller.notificationBadgeAmount.value.toString(),
-                      style: TextStyle(color: Colors.white),
+                    badgeContent: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 2),
+                      child: Text(
+                        controller.notificationBadgeAmount.value.toString(),
+                        style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold),
+                      ),
                     ),
                     child: SizedBox(
-                        height: 25,
-                        child: Image.asset(Strings.notificationIcon,
-                            alignment: Alignment.center)),
+                      height: 25,
+                      child: Image.asset(
+                        Strings.notificationIcon,
+                        alignment: Alignment.center,
+                      ),
+                    ),
                   ),
                   Text("NOTICES",
                       style: TextStyle(color: Colors.grey, fontSize: 12),

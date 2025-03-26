@@ -130,8 +130,8 @@ class DialogNotificationsState extends State<DialogNotifications> {
                           ),
                         ),
                         if (postPublishNotifications?.data[index].read == "0") Positioned(
-                          top: 12,
-                          right: 50,
+                          top: 7,
+                          right: 40,
                           child:  GestureDetector(
                             child: Image.asset(Strings.readIcon, alignment: Alignment.center, height: 25, width: 25),
                             onTap: () {
@@ -145,11 +145,11 @@ class DialogNotificationsState extends State<DialogNotifications> {
                           ),
                         ),
                         Positioned(
-                          top: 0,
-                          right: 0,
-                          child: IconButton(
-                            icon: Icon(Icons.close, color: Colors.red.shade800),
-                            onPressed: () {
+                          top: 10,
+                          right: 10,
+                          child: GestureDetector(
+                            child: Image.asset(Strings.closeIcon, alignment: Alignment.center, height: 20, width: 20),
+                            onTap: () {
                               dialogNotificationsState?.call(() {
                                 EasyLoading.show(status: 'loading...');
                                 CityScoopRepository().updateNotificationsApi(updateId: postPublishNotifications?.data[index].id ?? "", type: postPublishNotifications?.data[index].type ?? "", read: 0, delete: 1).whenComplete((){

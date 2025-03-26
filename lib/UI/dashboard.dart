@@ -17,7 +17,8 @@ class DashboardScreen extends StatefulWidget {
 
 class DashboardScreenState extends State<DashboardScreen> {
 
-  String? accessToken, userName;
+  String? accessToken, userName, dashboardUrl, profileUrl, calendarUrl;
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
@@ -29,6 +30,18 @@ class DashboardScreenState extends State<DashboardScreen> {
         Utilities.getStringPreference(Strings.dashboardUsername)
             .then((value) => setState(() {
           userName = value;
+          Utilities.getStringPreference(Strings.dashboardURL)
+              .then((value) => setState(() {
+            dashboardUrl = value;
+            Utilities.getStringPreference(Strings.profileURL)
+                .then((value) => setState(() {
+              profileUrl = value;
+              Utilities.getStringPreference(Strings.calendarURL)
+                  .then((value) => setState(() {
+                calendarUrl = value;
+              }));
+            }));
+          }));
         }));
       }));
     });
@@ -49,6 +62,12 @@ class DashboardScreenState extends State<DashboardScreen> {
                   width: Utilities.getDeviceWidth(context),
                   height: 100,
                   child: Image.asset(Strings.logoGrey, fit: BoxFit.scaleDown)),
+              Expanded(
+                child: SingleChildScrollView(
+                  controller: _scrollController,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
               GestureDetector(
                 onTap: () {
                   setState(() {
@@ -62,47 +81,93 @@ class DashboardScreenState extends State<DashboardScreen> {
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 20, bottom: 20),
-                child: Text("Welcome, $userName.", style: TextStyle(color: Colors.white, fontSize: 22), textAlign: TextAlign.center),
+                child: Text("Welcome, $userName.", style: TextStyle(color: Colors.white, fontSize: 22, fontFamily: "LevenimMT",  fontWeight: FontWeight.bold), textAlign: TextAlign.center),
               ),
               GestureDetector(
                 onTap: (){
                   setState(() {
-                    openUrlInBrowser("https://cityscoop.us/oaklandca-electrical/wp-admin/admin.php?page=cs-dashboard&applogin=1&date=2024-04");
+                    openUrlInBrowser("$dashboardUrl");
                   });
                 },
-                child: Container(
-                    padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                    width: Utilities.getDeviceWidth(context),
-                    height: Utilities.getDeviceHeight(context) * 0.20,
-                    child: Image.asset(Strings.dashLogo, alignment: Alignment.center)),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Stack(
+                      alignment: AlignmentDirectional.center,
+                      children: [
+                        Container(
+                          padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                          width: Utilities.getDeviceWidth(context),
+                          height: Utilities.getDeviceHeight(context) * 0.20,
+                          child: Image.asset(Strings.dashLogo, alignment: Alignment.center)),
+                        Positioned(
+                          bottom: 0,
+                          child: SizedBox(
+                              height: 40,
+                              child: Text("DASHBOARD",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      letterSpacing: 2.5,
+                                      color: Colors.white,
+                                      fontFamily: "LevenimMT",
+                                      fontSize: 28,
+                                      fontWeight: FontWeight.bold))),
+                        ),
+                      ]
+                    ),
+                    SizedBox(
+                        child: Text("Metrics & Analysis",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                letterSpacing: 5,
+                                color: Colors.white,
+                                fontFamily: "LevenimMT",
+                                fontSize: 14))),
+                  ],
+                ),
               ),
-              SizedBox(height: 10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   GestureDetector(
                     onTap: () {
                       setState(() {
-                        openUrlInBrowser("https://cityscoop.us/all/members/cstestdh/profile/biz-profile-settings");
+                        openUrlInBrowser("$profileUrl");
                       });
                     },
-                    child: Container(
-                        padding: EdgeInsets.all(10),
-                        width: Utilities.getDeviceWidth(context) / 2,
-                        height: Utilities.getDeviceHeight(context) * 0.15,
-                        child: Image.asset(Strings.dashProfileLogo, alignment: Alignment.center)),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Container(
+                            padding: EdgeInsets.all(10),
+                            width: Utilities.getDeviceWidth(context) / 2,
+                            height: Utilities.getDeviceHeight(context) * 0.12,
+                            child: Image.asset(Strings.profileLogo, alignment: Alignment.center, scale: 2)),
+                        SizedBox(height: 25, child: Text("PROFILE", textAlign: TextAlign.center, style: TextStyle(letterSpacing: 2,color: Colors.white, fontFamily: "LevenimMT", fontSize: 18, fontWeight: FontWeight.bold))),
+                        SizedBox(height: 25, child: Text("Company Info", textAlign: TextAlign.center, style: TextStyle(letterSpacing: 2.5,color: Colors.white, fontFamily: "LevenimMT", fontSize: 11, fontWeight: FontWeight.bold))),
+                      ],
+                    ),
                   ),
                   GestureDetector(
                     onTap: () {
                       setState(() {
-                        openUrlInBrowser("https://app.asana.com/0/1206112293952328/1206112293952328");
+                        openUrlInBrowser("$calendarUrl");
                       });
                     },
-                    child: Container(
-                        padding: EdgeInsets.all(10),
-                        width: Utilities.getDeviceWidth(context) / 2,
-                        height: Utilities.getDeviceHeight(context) * 0.15,
-                        child: Image.asset(Strings.dashCalenderLogo, alignment: Alignment.center)),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        SizedBox(height: Utilities.getDeviceHeight(context) * 0.01),
+                        Container(
+                            padding: EdgeInsets.all(10),
+                            width: Utilities.getDeviceWidth(context) / 2,
+                            height: Utilities.getDeviceHeight(context) * 0.10,
+                            child: Image.asset(Strings.calenderLogo, alignment: Alignment.center)),
+                        SizedBox(height: Utilities.getDeviceHeight(context) * 0.01),
+                        SizedBox(height: 25, child: Text("CALENDAR", textAlign: TextAlign.center, style: TextStyle(letterSpacing: 2,color: Colors.white, fontFamily: "LevenimMT", fontSize: 18, fontWeight: FontWeight.bold))),
+                        SizedBox(height: 25, child: Text("Campaign Details", textAlign: TextAlign.center, style: TextStyle(letterSpacing: 2.5, color: Colors.white, fontFamily: "LevenimMT", fontSize: 11, fontWeight: FontWeight.bold))),
+                      ],
+                    ),
                   ),
                 ],),
               Padding(
@@ -151,6 +216,10 @@ class DashboardScreenState extends State<DashboardScreen> {
                             ),
                           ),
                         ],),
+                    ],
+                  ),
+                ),
+              ),
                     ],
                   ),
                 ),
