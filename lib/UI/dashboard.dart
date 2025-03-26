@@ -18,6 +18,7 @@ class DashboardScreen extends StatefulWidget {
 class DashboardScreenState extends State<DashboardScreen> {
 
   String? accessToken, userName;
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
@@ -49,6 +50,12 @@ class DashboardScreenState extends State<DashboardScreen> {
                   width: Utilities.getDeviceWidth(context),
                   height: 100,
                   child: Image.asset(Strings.logoGrey, fit: BoxFit.scaleDown)),
+              Expanded(
+                child: SingleChildScrollView(
+                  controller: _scrollController,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
               GestureDetector(
                 onTap: () {
                   setState(() {
@@ -196,6 +203,10 @@ class DashboardScreenState extends State<DashboardScreen> {
                             ),
                           ),
                         ],),
+                    ],
+                  ),
+                ),
+              ),
                     ],
                   ),
                 ),
