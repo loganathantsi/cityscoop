@@ -329,6 +329,9 @@ class LoginScreenState extends State<LoginScreen> with SingleTickerProviderState
     final LoginResponse? loginResponse = await CityScoopRepository().callLoginApi(usernameController.text, passwordController.text);
     if (loginResponse != null) {
       Utilities.setStringPreference(Strings.accessToken, loginResponse.token);
+      Utilities.setStringPreference(Strings.dashboardURL, loginResponse.csDashboardUrl);
+      Utilities.setStringPreference(Strings.profileURL, loginResponse.profileEditUrl);
+      Utilities.setStringPreference(Strings.calendarURL, loginResponse.cscProjectBoardUrl);
       Utilities.setBoolPreference(Strings.loginSuccess, true);
       notificationTokenApi(loginResponse.token);
     } else {

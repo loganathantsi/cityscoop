@@ -39,4 +39,7 @@ class Strings {
   static const String username = "USERNAME";
   static const String password = "PASSWORD";
   static const String dashboardUsername = "DASHBOARD_USERNAME";
+  static const String dashboardURL = "DASHBOARD_URL";
+  static const String profileURL = "PROFILE_URL";
+  static const String calendarURL = "CALENDAR_URL";
 }
