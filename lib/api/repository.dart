@@ -228,6 +228,7 @@ class CityScoopRepository {
     });
 
     request.fields["notification_token"] = deviceToken ?? "";
+    request.fields["device_type"] = "ios";
 
     var response = await request.send();
     var responseString = await response.stream.bytesToString();
