@@ -26,16 +26,12 @@ class LoginScreenState extends State<LoginScreen> with SingleTickerProviderState
   TextEditingController passwordController = TextEditingController();
   String termsContent = "";
   bool isRememberMe = false;
-  String? deviceToken;
 
   @override
   void initState() {
     super.initState();
     _scrollToTop();
     readFile();
-    // For iOS only
-    //requestPermission();
-    getDeviceToken();
     setupFirebaseMessaging();
     Utilities.getStringPreference(Strings.username)
         .then((value) => setState(() {
@@ -256,33 +252,11 @@ class LoginScreenState extends State<LoginScreen> with SingleTickerProviderState
     });
   }
 
-  // For iOS only
-  // Future<void> requestPermission() async {
-  //   FirebaseMessaging messaging = FirebaseMessaging.instance;
-  //   NotificationSettings settings = await messaging.requestPermission(
-  //     alert: true,
-  //     announcement: false,
-  //     badge: true,
-  //     carPlay: false,
-  //     criticalAlert: false,
-  //     provisional: false,
-  //     sound: true,
-  //   );
-  //
-  //   if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-  //     print('---> User granted permission');
-  //   } else {
-  //     print('---> User declined or has not granted permission');
-  //   }
-  // }
-
-  // FirebaseMessaging.instance.onTokenRefresh.listen((newToken) {
-  // print("New Token: $newToken");
-  // });
-
-  Future<void> getDeviceToken() async {
-    deviceToken = await FirebaseMessaging.instance.getToken();
-    setState(() {});
+  Future<void> getDeviceToken(String? token) async {
+    String? deviceToken = await FirebaseMessaging.instance.getToken();
+    setState(() {
+      notificationTokenApi(token, deviceToken);
+    });
     print("---> FCM Device Token: $deviceToken");
   }
 
@@ -330,14 +304,14 @@ class LoginScreenState extends State<LoginScreen> with SingleTickerProviderState
       Utilities.setStringPreference(Strings.profileURL, loginResponse.profileEditUrl);
       Utilities.setStringPreference(Strings.calendarURL, loginResponse.cscProjectBoardUrl);
       Utilities.setBoolPreference(Strings.loginSuccess, true);
-      notificationTokenApi(loginResponse.token);
+      getDeviceToken(loginResponse.token);
     } else {
       EasyLoading.dismiss();
       error();
     }
   }
 
-  Future<void> notificationTokenApi(String? token) async {
+  Future<void> notificationTokenApi(String? token, String? deviceToken) async {
     EasyLoading.show(status: 'Loading...');
     final NotificationTokenResponse? notificationTokenResponse = await CityScoopRepository().notificationTokenApi(token, deviceToken);
     if (notificationTokenResponse != null) {
