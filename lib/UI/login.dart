@@ -26,7 +26,6 @@ class LoginScreenState extends State<LoginScreen>
   TextEditingController passwordController = TextEditingController();
   String termsContent = "";
   bool isRememberMe = false;
-  String? deviceToken;
 
   @override
   void initState() {
@@ -35,7 +34,6 @@ class LoginScreenState extends State<LoginScreen>
     readFile();
     // For iOS only
     requestPermission();
-    getDeviceToken();
     setupFirebaseMessaging();
     Utilities.getStringPreference(Strings.username).then(
       (value) => setState(() {
@@ -308,13 +306,11 @@ class LoginScreenState extends State<LoginScreen>
     }
   }
 
-  //FirebaseMessaging.instance.onTokenRefresh.listen((newToken) {
-  //print("New Token: $newToken");
-  //});
-
-  Future<void> getDeviceToken() async {
-    deviceToken = await FirebaseMessaging.instance.getToken();
-    setState(() {});
+  Future<void> getDeviceToken(String? token) async {
+    String? deviceToken = await FirebaseMessaging.instance.getToken();
+    setState(() {
+      notificationTokenApi(token, deviceToken);
+    });
     print("---> FCM Device Token: $deviceToken");
   }
 
@@ -365,14 +361,14 @@ class LoginScreenState extends State<LoginScreen>
       Utilities.setStringPreference(Strings.profileURL, loginResponse.profileEditUrl);
       Utilities.setStringPreference(Strings.calendarURL, loginResponse.cscProjectBoardUrl);
       Utilities.setBoolPreference(Strings.loginSuccess, true);
-      notificationTokenApi(loginResponse.token);
+      getDeviceToken(loginResponse.token);
     } else {
       EasyLoading.dismiss();
       error();
     }
   }
 
-  Future<void> notificationTokenApi(String? token) async {
+  Future<void> notificationTokenApi(String? token, String? deviceToken) async {
     EasyLoading.show(status: 'Loading...');
     final NotificationTokenResponse? notificationTokenResponse =
         await CityScoopRepository().notificationTokenApi(token, deviceToken);
