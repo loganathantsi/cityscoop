@@ -17,9 +17,8 @@ class BottomNavigation extends StatelessWidget {
   Widget build(BuildContext context) {
 
     return Obx(() => Container(
-        padding: EdgeInsets.fromLTRB(5, 8, 5, 0),
         color: Colors.white,
-        height: 60,
+        height: 80,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
@@ -28,6 +27,7 @@ class BottomNavigation extends StatelessWidget {
                 dialogNotifications(context);
               },
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   badges.Badge(
                     position: badges.BadgePosition.topEnd(top: -7, end: -21),
@@ -74,6 +74,7 @@ class BottomNavigation extends StatelessWidget {
                 }
               },
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Image.asset(Strings.homeIcon,
                       alignment: Alignment.center, height: 25),
@@ -91,6 +92,7 @@ class BottomNavigation extends StatelessWidget {
                 dialogLogout(context);
               },
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   SizedBox(
                       height: 25,

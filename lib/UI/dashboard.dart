@@ -194,9 +194,9 @@ class DashboardScreenState extends State<DashboardScreen> {
                               children: [
                                 SizedBox(
                                     width: Utilities.getDeviceWidth(context) / 8,
-                                    height: Utilities.getDeviceHeight(context) * 0.09,
+                                    height: Utilities.getDeviceHeight(context) * 0.08,
                                     child: Image.asset(Strings.dashUploadVideoLogo)),
-                                SizedBox(width: 90, height: 30, child: Text("VIDEO", textAlign: TextAlign.center, style: TextStyle(color: Colors.black, fontSize: 18, fontWeight: FontWeight.bold))),
+                                SizedBox(width: 90, height: 25, child: Text("VIDEO", textAlign: TextAlign.center, style: TextStyle(color: Colors.black, fontSize: 18, fontWeight: FontWeight.bold))),
                               ],
                             ),
                           ),
@@ -209,9 +209,9 @@ class DashboardScreenState extends State<DashboardScreen> {
                               children: [
                                 SizedBox(
                                     width: Utilities.getDeviceWidth(context) / 8,
-                                    height: Utilities.getDeviceHeight(context) * 0.09,
+                                    height: Utilities.getDeviceHeight(context) * 0.08,
                                     child: Image.asset(Strings.dashUploadPhotoLogo, alignment: Alignment.center)),
-                                SizedBox(width: 90, height: 30, child: Text("PHOTO", textAlign: TextAlign.center, style: TextStyle(color: Colors.black, fontSize: 18, fontWeight: FontWeight.bold))),
+                                SizedBox(width: 90, height: 25, child: Text("PHOTO", textAlign: TextAlign.center, style: TextStyle(color: Colors.black, fontSize: 18, fontWeight: FontWeight.bold))),
                               ],
                             ),
                           ),
