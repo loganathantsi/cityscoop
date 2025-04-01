@@ -194,8 +194,11 @@ class DialogNotificationsState extends State<DialogNotifications> {
 
   String _formatDate(String dateString) {
     try {
-      DateTime dateTime = DateTime.parse(dateString);
-      return DateFormat("MMMM dd yyyy hh:mm a").format(dateTime);
+      DateTime? dateTime = DateTime.parse(dateString);
+      String formattedDate = DateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'").format(dateTime);
+      DateTime? utcTime = DateTime.parse(formattedDate);
+      DateTime localTime = utcTime.toLocal();
+      return DateFormat("MMMM dd yyyy hh:mm a").format(localTime);
     } catch (e) {
       return dateString;
     }
