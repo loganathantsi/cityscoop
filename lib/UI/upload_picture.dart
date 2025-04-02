@@ -16,6 +16,7 @@ import 'package:flutter/material.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
+import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' as path;
 import '../model/post_publish_notifications_response_model.dart';
@@ -42,6 +43,8 @@ class UploadPictureState extends State<UploadPicture> {
   double _opacity = 0.5;
   String? fileExtensionSelectedImage, base64StringSelectedImage;
   String? base64StringFinalImage;
+  double _size = 0.3;
+  int _rotationAngle = 0;
 
   @override
   void initState() {
@@ -199,10 +202,28 @@ class UploadPictureState extends State<UploadPicture> {
                               child: DropdownSearch<String>(
                                 key: dropDownKey,
                                 selectedItem: selectedValue,
-                                items: (filter, infiniteScrollProps) => ["Select", "Bottom right", "Bottom left", "Top right", "Top left"],
+                                items: (filter, infiniteScrollProps) => ["Select","Top right","Top left","Bottom right","Bottom left"],
                                 popupProps: PopupProps.menu(
                                   fit: FlexFit.loose,
                                   constraints: BoxConstraints(),
+                                  menuProps: MenuProps(
+                                    backgroundColor: Colors.grey[100], // Grey background for popup menu
+                                  ),
+                                ),
+                                decoratorProps: DropDownDecoratorProps(
+                                  decoration: InputDecoration(
+                                    filled: true,
+                                    fillColor: Colors.white, // Grey background for dropdown field
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(0),
+                                      borderSide: BorderSide(color: Colors.grey), // Default border
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(0),
+                                      borderSide: BorderSide(color: Colors.grey, width: 2), // Grey border on focus
+                                    ),
+                                    contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                                  ),
                                 ),
                                 onChanged: (value) {
                                   setState(() {
@@ -211,12 +232,11 @@ class UploadPictureState extends State<UploadPicture> {
                                   });
                                 },
                               )
-
                           ),
                           Padding(
-                            padding: const EdgeInsets.fromLTRB(12, 25, 0, 25),
+                            padding: const EdgeInsets.fromLTRB(12, 6, 24, 6),
                             child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 SizedBox(child: Text("Select Transparency")),
                                 SliderTheme(
@@ -239,6 +259,69 @@ class UploadPictureState extends State<UploadPicture> {
                                       });
                                     },
                                   ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(12, 0, 24, 6),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                SizedBox(child: Text("Select Size")),
+                                SliderTheme(
+                                  data: SliderTheme.of(context).copyWith(
+                                    trackHeight: 2,
+                                    thumbShape: RoundSliderThumbShape(enabledThumbRadius: 16.0),
+                                  ),
+                                  child: Slider(
+                                    thumbColor: Colors.white,
+                                    activeColor: Colors.grey.shade300,
+                                    inactiveColor: Colors.grey.shade300,
+                                    value: _size,
+                                    min: 0.0,
+                                    max: 1.0,
+                                    divisions: 10,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        _size = value;
+                                        navigateToPreview();
+                                      });
+                                    },
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(12, 0, 42, 6),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                SizedBox(child: Text("Rotate Logo")),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    GestureDetector(
+                                      onTap: () {
+                                        _rotateLeft();
+                                      },
+                                      child: Padding(
+                                        padding: EdgeInsets.only(right: 25),
+                                        child: SizedBox(
+                                            height: 30,
+                                            child: Image.asset(Strings.rotateLeft, alignment: Alignment.center, fit: BoxFit.fill, color: Colors.grey)),
+                                      ),
+                                    ),
+                                    GestureDetector(
+                                      onTap: () {
+                                        _rotateRight();
+                                      },
+                                      child: SizedBox(
+                                          height: 30,
+                                          child: Image.asset(Strings.rotateRight, alignment: Alignment.center, fit: BoxFit.fill, color: Colors.grey)),
+                                    ),
+                                  ],
                                 ),
                               ],
                             ),
@@ -297,6 +380,48 @@ class UploadPictureState extends State<UploadPicture> {
       ),
       bottomNavigationBar: BottomNavigation(),
     );
+  }
+
+  void _rotateRight() {
+    setState(() {
+      _rotationAngle = 0;
+      _rotationAngle += 90;
+    });
+    _loadAndRotateImage();
+  }
+
+  void _rotateLeft() {
+    setState(() {
+      _rotationAngle = 0;
+      _rotationAngle += -90;
+    });
+    _loadAndRotateImage();
+  }
+
+  Future<void> _loadAndRotateImage() async {
+    if (watermarkImage == null) return;
+
+    ByteData? byteData = await watermarkImage!.toByteData(format: ui.ImageByteFormat.png);
+    if (byteData == null) return;
+
+    Uint8List uint8List = byteData.buffer.asUint8List();
+    img.Image? newImage = img.decodeImage(uint8List);
+    if (newImage == null) return;
+
+    img.Image rotatedImage = img.copyRotate(angle: _rotationAngle, newImage);
+    Uint8List rotatedBytes = Uint8List.fromList(img.encodePng(rotatedImage));
+    watermarkImage = await convertToUIImage(rotatedBytes);
+    setState(() {
+      navigateToPreview();
+    });
+  }
+
+  Future<ui.Image> convertToUIImage(Uint8List bytes) async {
+    final Completer<ui.Image> completer = Completer();
+    ui.decodeImageFromList(bytes, (ui.Image img) {
+      completer.complete(img);
+    });
+    return completer.future;
   }
 
   void errorSwitch() {
@@ -463,7 +588,7 @@ class UploadPictureState extends State<UploadPicture> {
         ..color = Color.fromARGB((_opacity * 255).toInt(), 255, 255, 255) // Dynamic opacity
         ..blendMode = BlendMode.srcOver;
 
-      double watermarkWidth = imageSize.width * 0.3;
+      double watermarkWidth = imageSize.width * _size;
       double watermarkHeight = (watermarkImage!.height / watermarkImage!.width) * watermarkWidth;
 
       double dx = 20;

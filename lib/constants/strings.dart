@@ -14,6 +14,8 @@ class Strings {
   static const String profileLogo = 'assets/images/cs_profile.png';
   static const String dashUploadPhotoLogo = 'assets/images/cs_upload_photo.png';
   static const String dashUploadVideoLogo = 'assets/images/cs_upload_video.png';
+  static const String rotateLeft = 'assets/images/rotate_left.png';
+  static const String rotateRight = 'assets/images/rotate_right.png';
   static const String homeIcon = 'assets/images/cs_home_icon.png';
   static const String readIcon = 'assets/images/cs_read_icon.png';
 
