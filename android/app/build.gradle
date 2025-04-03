@@ -27,8 +27,8 @@ android {
         applicationId = "com.cityscoop.app"
         minSdkVersion 21
         targetSdkVersion 35
-        versionCode = flutter.versionCode
-        versionName = flutter.versionName
+        versionCode = 20250403
+        versionName = "3.0.0"
     }
 
     buildTypes {
