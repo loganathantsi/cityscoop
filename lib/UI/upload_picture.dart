@@ -32,7 +32,7 @@ class UploadPicture extends StatefulWidget {
 class UploadPictureState extends State<UploadPicture> {
 
   bool isSwitch = false;
-  String selectedValue = "Select";
+  String selectedValue = "Bottom right";
   final dropDownKey = GlobalKey<DropdownSearchState>();
   UserLogoResponse? userLogoResponse;
   String? accessToken, userLogoUrl;
@@ -114,10 +114,14 @@ class UploadPictureState extends State<UploadPicture> {
                                             setState(() {
                                               if(_selectedImage != null) {
                                                 isSwitch = value;
-                                                if(value == false){
-                                                  selectedValue = "Select";
+                                                if(value == false) {
+                                                  selectedValue = "Bottom right";
                                                   _opacity = 0.5;
+                                                  _size = 0.3;
+                                                  _rotationAngle = 0;
                                                   finalWatermarkedImage = null;
+                                                } else {
+                                                  navigateToPreview();
                                                 }
                                               } else {
                                                 errorSwitch();
@@ -140,17 +144,7 @@ class UploadPictureState extends State<UploadPicture> {
                                       ),
                                       Positioned(
                                         left: isSwitch ? 10 : 30,
-                                        child: GestureDetector(
-                                          onTap: () {
-                                            setState(() {
-                                              if(_selectedImage != null) {
-                                                isSwitch = !isSwitch;
-                                              } else {
-                                                errorSwitch();
-                                              }
-                                            });
-                                          },
-                                          child: Text(
+                                        child: Text(
                                             isSwitch ? "ON" : "OFF",
                                             style: TextStyle(
                                               fontSize: 10,
@@ -158,7 +152,6 @@ class UploadPictureState extends State<UploadPicture> {
                                               color: isSwitch ? Colors.red.shade800 : Colors.grey,
                                             ),
                                           ),
-                                        ),
                                       ),
                                     ]
                                   ),
@@ -202,7 +195,7 @@ class UploadPictureState extends State<UploadPicture> {
                               child: DropdownSearch<String>(
                                 key: dropDownKey,
                                 selectedItem: selectedValue,
-                                items: (filter, infiniteScrollProps) => ["Select","Top right","Top left","Bottom right","Bottom left"],
+                                items: (filter, infiniteScrollProps) => ["Bottom right","Bottom left","Top right","Top left"],
                                 popupProps: PopupProps.menu(
                                   fit: FlexFit.loose,
                                   constraints: BoxConstraints(),
@@ -227,7 +220,7 @@ class UploadPictureState extends State<UploadPicture> {
                                 ),
                                 onChanged: (value) {
                                   setState(() {
-                                    selectedValue = value ?? "Select";
+                                    selectedValue = value ?? "Bottom right";
                                     navigateToPreview();
                                   });
                                 },
@@ -623,8 +616,6 @@ class UploadPictureState extends State<UploadPicture> {
           setState(() {
             dx = imageSize.width - watermarkWidth - 20;
             dy = imageSize.height - watermarkHeight - 20;
-            watermarkWidth = 0;
-            watermarkHeight = 0;
           });
       }
 
