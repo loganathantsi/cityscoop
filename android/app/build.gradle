@@ -8,10 +8,8 @@ apply plugin: 'com.google.gms.google-services'
 
 android {
     namespace = "com.cityscoop.app"
-    compileSdk = flutter.compileSdkVersion
-    ndkVersion = flutter.ndkVersion
-    compileSdkVersion 35
-    ndkVersion "27.0.12077973"
+    compileSdk = 36
+    ndkVersion = "30.0.15729638"
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
@@ -25,8 +23,8 @@ android {
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId = "com.cityscoop.app"
-        minSdkVersion 21
-        targetSdkVersion 35
+        minSdk = flutter.minSdkVersion
+        targetSdk = 35
         versionCode = 20250403
         versionName = "3.0.0"
     }
